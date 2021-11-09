@@ -1,32 +1,30 @@
-"""Getting unigrams, bigrams, and trigrams from training set"""
+#!/usr/bin/env python3
+# # -*- coding: utf-8 -*-"""Getting ngrams of variable length from training corpus"""
 __author__ = "Raihan Ahmed"
 
 import sys
 import re
 import os
 
-#ngram function where n can equal any number and returns a dictionary with their frequency
 def ngram(sentences, n):
+    """ Function to find ngrams in a given corpus, where n can equal any number and returns a dictionary
+        with the corpus' respective ngrams and their frequencies. Runtime complexity: O(m*n), where m = number
+        of sentences and n = number of iterations needed to find ngrams in a sentence """
 
     dictionary = {}
 
     for sentence in sentences:
         #add n - 1 star symbols to the beginning of the list to account for ngrams of different size
         sentence = ((n - 1) * ['*']) + sentence.split(" ")
-        count = 0
 
-        for i in range(len(sentence)):
-            #while loop ensures that ngram creation stops when the last word of the sentence is included in an ngram
-            while count + n <= len(sentence):
-                #joining tokens to create a single string
-                token = ' '.join(sentence[count:count + n])
+        for i in range(len(sentence)-n- 1):
+            #joining tokens to create a single string
+            token = ' '.join(sentence[i:i+n])
 
-                if token in dictionary:
-                    dictionary[token] += 1
-                else:
-                    dictionary.update({token : 1})
-
-                count += 1
+            if token in dictionary:
+                dictionary[token] += 1
+            else:
+                dictionary.update({token : 1})
 
     #sort dictionary from greatest count to lowest count
     sorted_dictionary = sorted(dictionary.items(), key=lambda x: x[1], reverse = True)
@@ -34,6 +32,8 @@ def ngram(sentences, n):
     return sorted_dictionary
 
 def write_to_file(sorted_unigrams, sorted_bigrams, sorted_trigrams, output_file):
+    """ Function used for writing unigram, bigram, and trigram contents into a model file"""
+
     vocab_size = len(sorted_unigrams)
     total_words = 0
 
@@ -59,6 +59,8 @@ def write_to_file(sorted_unigrams, sorted_bigrams, sorted_trigrams, output_file)
         f.close()
 
 def clean_text(input_file):
+    """ Function used for cleaning text. Auxiliary and closed-category words are not removed to be able to
+        to ensure that training sentences are syntactically sound"""
 
     try:
         #read file in binary
@@ -77,25 +79,20 @@ def clean_text(input_file):
         #Remove any special characters that are not alphanumeric or space
         lines = [re.sub('[^A-Za-z0-9 ]+', '', line) for line in lines]
 
-        #Remove extra spaces between words
-        lines = [re.sub(' +', ' ', line) for line in lines]
-
         f.close()
 
         return lines
 
-#extract necessary lines from input file
-def main(input_file, output_file):
-
-    sentences = clean_text(input_file)
-
-    write_to_file(ngram(sentences, 1), ngram(sentences, 2), ngram(sentences, 3), output_file)
-
-    print("======= Model file successfully created! =======")
-
+#Main driver used for debugging
 if __name__ == '__main__':
 
     #read input and output files
     inputs = sys.argv[1:]
 
-    main(inputs[0], inputs[1])
+    #extract necessary lines from input file
+    sentences = clean_text(input_file)
+
+    #ngrams dictionary is written to text file
+    write_to_file(ngram(sentences, 1), ngram(sentences, 2), ngram(sentences, 3), output_file)
+
+    print("======= Model file successfully created! =======")
