@@ -1,2 +1,2 @@
 # POS-Tagger
-This repository details how to create a Part of Speech tagger by training a model to predict to word tags in a sentence.
+This repository details the creation of a Part of Speech tagger using Trigram Hidden Markov Models to predict word tags in a sentence.
