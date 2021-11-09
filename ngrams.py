@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# # -*- coding: utf-8 -*-"""Getting ngrams of variable length from training corpus"""
+# # -*- coding: utf-8 -*-
 __author__ = "Raihan Ahmed"
 
 import sys
