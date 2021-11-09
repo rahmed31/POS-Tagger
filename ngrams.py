@@ -8,8 +8,8 @@ import os
 
 def ngram(sentences, n):
     """ Function to find ngrams in a given corpus, where n can equal any number and returns a dictionary
-        with the corpus' respective ngrams and their frequencies. Runtime complexity: O(m*n), where m = number
-        of sentences and n = number of iterations needed to find ngrams in a sentence """
+        with the corpus' respective ngrams and their frequencies. Runtime complexity: O(k*m), where k = the number
+        of sentences and m = the len(sentence) minus n """
 
     dictionary = {}
 
@@ -69,8 +69,7 @@ def clean_text(input_file):
             lines = f.read().decode()
 
     except IOError:
-        print("Error: The input file does not appear to exist!")
-        print("Operation terminated.")
+        print("Error: The input file does not appear to exist! Operation terminated.")
     else:
         #Replace commas with empty string and apostrophes with space, lowercase the entire corpus, replace common
         #end-of-sentence punctuation with "STOP" and remove empty lines
