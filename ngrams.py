@@ -17,7 +17,7 @@ def ngram(sentences, n):
         #add n - 1 star symbols to the beginning of the list to account for ngrams of different size
         sentence = ((n - 1) * ['*']) + sentence.split(" ")
 
-        for i in range(len(sentence)-n- 1):
+        for i in range(len(sentence) - n + 1):
             #joining tokens to create a single string
             token = ' '.join(sentence[i:i+n])
 
@@ -53,6 +53,7 @@ def write_to_file(sorted_unigrams, sorted_bigrams, sorted_trigrams, output_file)
         for key, value in sorted_trigrams:
             string = key + '\t' + str(value)
             f.write(string + '\n')
+
         f.write("@vocab_size@\t" + str(vocab_size) + '\n')
         f.write("@total@\t" + str(total_words))
 
@@ -77,6 +78,9 @@ def clean_text(input_file):
 
         #Remove any special characters that are not alphanumeric or space
         lines = [re.sub('[^A-Za-z0-9 ]+', '', line) for line in lines]
+
+        #Remove extra spaces between words
+        lines = [re.sub(' +', ' ', line) for line in lines]
 
         f.close()
 
