@@ -14,7 +14,8 @@ def ngrams(sentences, n):
     ngrams = {}
 
     for sentence in sentences:
-        word_list = []
+        #add n - 1 star symbols to the beginning of the list to account for ngrams of different size
+        word_list = ((n - 1) * ['*'])
 
         for word in sentence.split(" "):
             word = word.rsplit('/', 1)[0]
@@ -42,13 +43,14 @@ def pos_sequences(sentences, n):
     tag_sequences = {}
 
     for sentence in sentences:
-        tags_list = []
+        #add n - 1 star symbols to the beginning of the list to account for ngrams of different size
+        tags_list = ((n - 1) * ['*'])
 
         for word in sentence.split(" "):
             pos = word.rsplit('/', 1)[1]
             tags_list.append(pos)
 
-        for i in range(len(word_list) - n + 1):
+        for i in range(len(tags_list) - n + 1):
             #joining pos tags in tags_list to create a single tag sequence
             sequence = ' '.join(tags_list[i:i+n])
 
@@ -63,7 +65,7 @@ def pos_sequences(sentences, n):
     return sorted_tag_sequences
 
 def clean_text(input_file):
-    """ Function used for cleaning text from training data that follows the format of the Brown corpis. Closed
+    """ Function used for cleaning text from training data that follows the format of the Brown corpus. Closed
         category words and punctuation are not removed to be able to ensure that training sentences are
         syntactically sound"""
 
@@ -76,9 +78,10 @@ def clean_text(input_file):
     except IOError:
         print("Error: The input file does not appear to exist! Operation terminated.")
     else:
-        #Replace commas with empty string and apostrophes with space, lowercase the entire corpus, replace common
-        #end-of-sentence punctuation with "STOP" and remove empty lines
-        lines = [line.replace(",", "").replace("'", "").strip().lower() + " STOP" for line in re.split('[.!?:;] ', lines) if len(line.strip())  != 0]
+        #Split lines by new line character, remove empty lines, lowercase everything
+        lines = [line.lower().strip() for line in lines.splitlines() if len(line.strip()) != 0]
+
+        #NEED TO REMOVE SPECIAL CHARACTERS NOT CLASSIFIED BY BROWN CORPUS POS GENERATOR!!!
 
         #Remove extra spaces between words
         lines = [re.sub(' +', ' ', line) for line in lines]
@@ -119,13 +122,10 @@ def write_to_file(sorted_unigrams, sorted_bigrams, sorted_trigrams, output_file)
 #Main driver used for debugging
 if __name__ == '__main__':
 
-    sentences = clean_training_corpus('/Users/raihanahmed/Desktop/POS Tagger/lib/train_corpus.txt')
+    sentences = clean_text('/Users/raihanahmed/Desktop/POS Tagger/lib/train_corpus.txt')
 
-    words, pos = pos_ngrams(sentences, 1)
-
-    # print(words)
-
-    print(pos)
+    print(ngrams(sentences, 1))
+    print(pos_sequences(sentences, 1))
 
 
 
