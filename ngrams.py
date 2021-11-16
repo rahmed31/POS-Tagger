@@ -8,8 +8,9 @@ import os
 
 def ngram(sentences, n):
     """ Function to find ngrams in a given corpus, where n can equal any number and returns a dictionary
-        with the corpus' respective ngrams and their frequencies. Runtime complexity: O(k*m), where k = the number
-        of sentences and m = the len(sentence) minus n """
+        with the corpus' respective ngrams and their frequencies. This works for both the corpus word sequences
+        and corpus tag sequences. Runtime complexity: O(k*m), where k = the number of sentences
+        and m = the len(sentence) minus n """
 
     dictionary = {}
 
@@ -32,7 +33,8 @@ def ngram(sentences, n):
     return sorted_dictionary
 
 def write_to_file(sorted_unigrams, sorted_bigrams, sorted_trigrams, output_file):
-    """ Function used for writing unigram, bigram, and trigram contents into a model file"""
+    """ Function used for writing unigram, bigram, and trigram word or tag sequence
+        contents into a model file"""
 
     vocab_size = len(sorted_unigrams)
     total_words = 0
@@ -76,8 +78,8 @@ def clean_text(input_file):
         #end-of-sentence punctuation with "STOP" and remove empty lines
         lines = [line.replace(",", "").replace("'", "").strip().lower() + " STOP" for line in re.split('[.!?:;] ', lines) if len(line.strip())  != 0]
 
-        #Remove any special characters that are not alphanumeric or space
-        lines = [re.sub('[^A-Za-z0-9 ]+', '', line) for line in lines]
+        #Remove non-alphanumeric special characters
+        lines = [re.sub('\W+', ' ', line) for line in lines]
 
         #Remove extra spaces between words
         lines = [re.sub(' +', ' ', line) for line in lines]
