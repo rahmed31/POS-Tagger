@@ -6,55 +6,111 @@ import sys
 import re
 import os
 
-def pos_ngrams(sentences, n):
-    """ Function to find ngrams and pos sequences of length n in Brown training corpus. It returns two dictionaries:
-        one containing the corpus' pos sequences and their frequencies, and the other containing the corpus' ngrams and
-        their frequencies. This function specifically caters to the format of the Brown corpus. Runtime complexity: O(n^2) """
+def ngrams(sentences, n):
+    """ Function to find ngrams of specified length 'n'. It returns a dictionary
+        containing the corpus' ngrams and their frequencies. This function specifically caters to files
+        with the format of the Brown corpus. Runtime complexity: O(n^2) """
 
     ngrams = {}
-    tag_sequences = {}
 
     for sentence in sentences:
-
         word_list = []
-        tags_list = []
 
         for word in sentence.split(" "):
-            word, pos = word.rsplit('/', 1)
+            word = word.rsplit('/', 1)[0]
             word_list.append(word)
-            tags_list.append(pos)
 
         for i in range(len(word_list) - n + 1):
             #joining tokens in word_list to create a single string
             token = ' '.join(word_list[i:i+n])
-
-            #joining pos tags in tags_list to create a single tag sequence
-            sequence = ' '.join(tags_list[i:i+n])
 
             if token in ngrams:
                 ngrams[token] += 1
             else:
                 ngrams.update({token : 1})
 
+    #sort ngrams dictionary from greatest count to lowest count
+    sorted_ngrams = sorted(ngrams.items(), key=lambda x: x[1], reverse = True)
+
+    return sorted_ngrams
+
+def pos_sequences(sentences, n):
+    """ Function to find pos sequences of length n in Brown training corpus. It returns a dictionary
+        containing the corpus' pos sequences and their frequencies. This function specifically caters to files
+        with the format of the Brown corpus. Runtime complexity: O(n^2) """
+
+    tag_sequences = {}
+
+    for sentence in sentences:
+        tags_list = []
+
+        for word in sentence.split(" "):
+            pos = word.rsplit('/', 1)[1]
+            tags_list.append(pos)
+
+        for i in range(len(word_list) - n + 1):
+            #joining pos tags in tags_list to create a single tag sequence
+            sequence = ' '.join(tags_list[i:i+n])
+
             if sequence in tag_sequences:
                 tag_sequences[sequence] += 1
             else:
                 tag_sequences.update({sequence : 1})
 
-    #sort ngrams dictionary from greatest count to lowest count
-    sorted_ngrams = sorted(ngrams.items(), key=lambda x: x[1], reverse = True)
-
     #sort tag_sequences dictionary from greatest count to lowest count
     sorted_tag_sequences = sorted(tag_sequences.items(), key=lambda x: x[1], reverse = True)
 
-    return sorted_ngrams, sorted_tag_sequences
+    return sorted_tag_sequences
+
+# def pos_ngrams(sentences, n):
+#     """ Function to find ngrams and pos sequences of length n in Brown training corpus. It returns two dictionaries:
+#         one containing the corpus' pos sequences and their frequencies, and the other containing the corpus' ngrams and
+#         their frequencies. This function specifically caters to the format of the Brown corpus. Runtime complexity: O(n^2) """
+#
+#     ngrams = {}
+#     tag_sequences = {}
+#
+#     for sentence in sentences:
+#
+#         word_list = []
+#         tags_list = []
+#
+#         for word in sentence.split(" "):
+#             word, pos = word.rsplit('/', 1)
+#             word_list.append(word)
+#             tags_list.append(pos)
+#
+#         for i in range(len(word_list) - n + 1):
+#             #joining tokens in word_list to create a single string
+#             token = ' '.join(word_list[i:i+n])
+#
+#             #joining pos tags in tags_list to create a single tag sequence
+#             sequence = ' '.join(tags_list[i:i+n])
+#
+#             if token in ngrams:
+#                 ngrams[token] += 1
+#             else:
+#                 ngrams.update({token : 1})
+#
+#             if sequence in tag_sequences:
+#                 tag_sequences[sequence] += 1
+#             else:
+#                 tag_sequences.update({sequence : 1})
+#
+#     #sort ngrams dictionary from greatest count to lowest count
+#     sorted_ngrams = sorted(ngrams.items(), key=lambda x: x[1], reverse = True)
+#
+#     #sort tag_sequences dictionary from greatest count to lowest count
+#     sorted_tag_sequences = sorted(tag_sequences.items(), key=lambda x: x[1], reverse = True)
+#
+#     return sorted_ngrams, sorted_tag_sequences
 
 def clean_text(input_file):
     """ Function used for cleaning text. Closed category words and punctuation are not removed to be able to
         to ensure that training sentences are syntactically sound"""
 
     try:
-        #read text file 
+        #read text file
         with open(input_file, 'r') as f:
             #read all input from file at once
             lines = f.read()
