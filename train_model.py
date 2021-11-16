@@ -6,7 +6,7 @@ import sys
 import re
 import os
 
-def ngrams(sentences, n):
+def _ngrams(sentences, n):
     """ Function to find ngrams of specified length 'n'. It returns a dictionary
         containing the corpus' ngrams and their frequencies. This function specifically caters to files
         with the format of the Brown corpus. Runtime complexity: O(n^2) """
@@ -35,7 +35,7 @@ def ngrams(sentences, n):
 
     return sorted_ngrams
 
-def pos_sequences(sentences, n):
+def _pos_sequences(sentences, n):
     """ Function to find pos sequences of length n in Brown training corpus. It returns a dictionary
         containing the corpus' pos sequences and their frequencies. This function specifically caters to files
         with the format of the Brown corpus. Runtime complexity: O(n^2) """
@@ -64,7 +64,7 @@ def pos_sequences(sentences, n):
 
     return sorted_tag_sequences
 
-def clean_text(input_file):
+def _clean_text(input_file):
     """ Function used for cleaning text from training data that follows the format of the Brown corpus. Closed
         category words and punctuation are not removed to be able to ensure that training sentences are
         syntactically sound"""
@@ -90,14 +90,26 @@ def clean_text(input_file):
 
         return lines
 
-def write_to_file(sorted_unigrams, sorted_bigrams, sorted_trigrams, output_file):
-    """ Function used for writing unigram, bigram, and trigram word or tag sequence
-        contents into a model file"""
+def create_model_file(input_file):
+    """ Function for creating trigram hidden Markov model using unigrams, bigrams, trigrams,
+        word tag sequences, and their counts. The model is written onto a file in the library"""
+
+    input_text = _clean_text(input_file)
+
+    sorted_unigrams = _ngrams(input_text, 1)
+    sorted_tags_1 = _ngrams(input_text, 1)
+
+    sorted_bigrams = _ngrams(input_text, 2)
+    sorted_tags_2 = _ngrams(input_text, 2)
+
+    sorted_trigrams = _ngrams(input_text, 3)
+    sorted_tags_3 = _ngrams(input_text, 3)
 
     vocab_size = len(sorted_unigrams)
+    tag_size = len(sorted_tags_1)
     total_words = 0
 
-    with open(output_file, 'w+') as f:
+    with open('lib/model_file', 'w+') as f:
         #clear file if contents already exist
         f.truncate(0)
 
@@ -114,20 +126,34 @@ def write_to_file(sorted_unigrams, sorted_bigrams, sorted_trigrams, output_file)
             string = key + '\t' + str(value)
             f.write(string + '\n')
 
+        for key, value in sorted_tags_1:
+            string = key + '\t' + str(value)
+            f.write(string + '\n')
+
+        for key, value in sorted_tags_2:
+            string = key + '\t' + str(value)
+            f.write(string + '\n')
+
+        for key, value in sorted_tags_3:
+            string = key + '\t' + str(value)
+            f.write(string + '\n')
+
         f.write("@vocab_size@\t" + str(vocab_size) + '\n')
-        f.write("@total@\t" + str(total_words))
+        #total_words also equals total tags
+        f.write("@total_words@\t" + str(total_words) + '\n')
+        #tag_size is not necessarily the same as vocab_size (need to double check this)
+        f.write("@tag_size@\t" + str(tag_size) + '\n')
 
         f.close()
+
+    print("--------------------------------")
+    print("Model file successfully created!")
+    print("--------------------------------")
 
 #Main driver used for debugging
 if __name__ == '__main__':
 
-    sentences = clean_text('/Users/raihanahmed/Desktop/POS Tagger/lib/train_corpus.txt')
-
-    print(ngrams(sentences, 1))
-    print(pos_sequences(sentences, 1))
-
-
+    create_model_file('lib/train_corpus.txt')
 
 ##########################################################################################################
 
