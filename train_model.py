@@ -36,7 +36,7 @@ def _ngrams(sentences, n):
     return sorted_ngrams
 
 def _pos_sequences(sentences, n):
-    """ Function to find pos sequences of length n in Brown training corpus. It returns a dictionary
+    """ Function to find pos sequences of length 'n'. It returns a dictionary
         containing the corpus' pos sequences and their frequencies. This function specifically caters to files
         with the format of the Brown corpus. Runtime complexity: O(n^2) """
 
@@ -64,14 +64,14 @@ def _pos_sequences(sentences, n):
 
     return sorted_tag_sequences
 
-def _clean_text(input_file):
+def _clean_text(training_corpus):
     """ Function used for cleaning text from training data that follows the format of the Brown corpus. Closed
         category words and punctuation are not removed to be able to ensure that training sentences are
         syntactically sound"""
 
     try:
         #read text file
-        with open(input_file, 'r') as f:
+        with open(training_corpus, 'r') as f:
             #read all input from file at once
             lines = f.read()
 
@@ -90,11 +90,11 @@ def _clean_text(input_file):
 
         return lines
 
-def create_model_file(input_file):
+def create_model_file(training_corpus):
     """ Function for creating trigram hidden Markov model using unigrams, bigrams, trigrams,
         word tag sequences, and their counts. The model is written onto a file in the library"""
 
-    input_text = _clean_text(input_file)
+    input_text = _clean_text(training_corpus)
 
     sorted_unigrams = _ngrams(input_text, 1)
     sorted_tags_1 = _ngrams(input_text, 1)
