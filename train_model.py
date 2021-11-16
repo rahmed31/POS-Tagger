@@ -109,7 +109,7 @@ def create_model_file(input_file):
     tag_size = len(sorted_tags_1)
     total_words = 0
 
-    with open('lib/model_file', 'w+') as f:
+    with open('lib/model_file.txt', 'w+') as f:
         #clear file if contents already exist
         f.truncate(0)
 
