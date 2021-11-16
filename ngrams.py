@@ -6,6 +6,8 @@ import sys
 import re
 import os
 
+""" Work on this file has been postponed until further notice!!! """
+
 def ngram(sentences, n):
     """ Function to find ngrams in a given corpus, where n can equal any number and returns a dictionary
         with the corpus' respective ngrams and their frequencies. This works for both the corpus word sequences
