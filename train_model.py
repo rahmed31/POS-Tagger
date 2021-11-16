@@ -96,52 +96,46 @@ def create_model_file(training_corpus):
 
     input_text = _clean_text(training_corpus)
 
-    sorted_unigrams = _ngrams(input_text, 1)
-    sorted_tags_1 = _ngrams(input_text, 1)
-
-    sorted_bigrams = _ngrams(input_text, 2)
-    sorted_tags_2 = _ngrams(input_text, 2)
-
-    sorted_trigrams = _ngrams(input_text, 3)
-    sorted_tags_3 = _ngrams(input_text, 3)
-
-    vocab_size = len(sorted_unigrams)
-    tag_size = len(sorted_tags_1)
+    vocab_size = 0
+    tag_size = 0
     total_words = 0
 
     with open('lib/model_file.txt', 'w+') as f:
         #clear file if contents already exist
         f.truncate(0)
 
-        for key, value in sorted_unigrams:
+        for key, value in _ngrams(input_text, 1):
+            vocab_size += 1
             total_words += value
             string = key + '\t' + str(value)
             f.write(string + '\n')
 
-        for key, value in sorted_bigrams:
+        for key, value in _ngrams(input_text, 2):
             string = key + '\t' + str(value)
             f.write(string + '\n')
 
-        for key, value in sorted_trigrams:
+        for key, value in _ngrams(input_text, 3):
             string = key + '\t' + str(value)
             f.write(string + '\n')
 
-        for key, value in sorted_tags_1:
+        for key, value in _pos_sequences(input_text, 1):
+            tag_size += 1
             string = key + '\t' + str(value)
             f.write(string + '\n')
 
-        for key, value in sorted_tags_2:
+        for key, value in _pos_sequences(input_text, 2):
             string = key + '\t' + str(value)
             f.write(string + '\n')
 
-        for key, value in sorted_tags_3:
+        for key, value in _pos_sequences(input_text, 3):
             string = key + '\t' + str(value)
             f.write(string + '\n')
 
         f.write("@vocab_size@\t" + str(vocab_size) + '\n')
         #total_words also equals total tags
         f.write("@total_words@\t" + str(total_words) + '\n')
-        #tag_size is not necessarily the same as vocab_size (need to double check this)
+        #tag_size is not necessarily the same as vocab_size, but total tags will always
+        #be equal to total_words
         f.write("@tag_size@\t" + str(tag_size) + '\n')
 
         f.close()
