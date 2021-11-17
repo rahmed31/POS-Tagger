@@ -99,8 +99,8 @@ def clean_text(training_corpus):
 
 def create_model_file(tokenlists, taglists):
     """ Function for creating trigram hidden Markov model using POS unigrams, bigrams, trigrams, and
-        word/tag pairs with their emissions. The model is written onto a file in the library. The text file
-        will not be used beyond this point. The purpose of the model text file """
+        word/tag pairs with their emissions. The model is written onto a text file in: data > model_data.
+        The file is for visual and instructional purposes only. It will not be used when creating the POS tagger. """
 
     tag_size = 0
     tag_total = 0
