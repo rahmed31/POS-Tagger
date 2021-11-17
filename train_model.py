@@ -138,8 +138,6 @@ def create_model_file(training_corpus):
 
         f.close()
 
-def create_
-
     print("--------------------------------")
     print("Model file successfully created!")
     print("--------------------------------")
