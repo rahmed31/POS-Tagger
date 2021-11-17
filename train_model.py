@@ -73,7 +73,9 @@ def _emissions(sentences):
 def _clean_text(training_corpus):
     """ Function used for cleaning text from training data that follows the format of the Brown corpus. Closed
         category words and punctuation are not removed to be able to ensure that training sentences are
-        syntactically sound"""
+        syntactically sound. The first return value is a list that contains distinct lists holding the tokens
+        for each sentence in the training corpus. The second return value is a list that contains distinct
+        lists holding the parts of speech present for each sentence in the training corpus. """
 
     try:
         #read text file
@@ -85,27 +87,33 @@ def _clean_text(training_corpus):
         print("Error: The input file does not appear to exist! Operation terminated.")
     else:
         #Split lines by new line character, remove empty lines, lowercase everything
-        lines = [line.lower().strip() + STOP_SYMBOL for line in lines.splitlines() if len(line.strip()) != 0]
-
-        #NEED TO REMOVE SPECIAL CHARACTERS NOT CLASSIFIED BY BROWN CORPUS POS GENERATOR!!!
+        lines = [line.lower().strip() for line in lines.splitlines() if len(line.strip()) != 0]
 
         #Remove extra spaces between words
         lines = [re.sub(' +', ' ', line) for line in lines]
 
+        tokenlists = [[wordtag.rsplit('/', 1)[0] for wordtag in line.strip().split(" ")] for line in lines]
+        #Add start symbol to each list twice to account for trigram HMM, and add STOP_SYMBOL to mark the end of each sentence
+        tokenlists = [[START_SYMBOL] * 2 + tokenlist + [STOP_SYMBOL] for tokenlist in tokenlists]
+
+        taglists = [[wordtag.rsplit('/', 1)[-1] for wordtag in line.strip().split(" ")] for line in lines]
+        taglists = [[START_SYMBOL] * 2 + taglist + [STOP_SYMBOL] for taglist in taglists]
+
         f.close()
 
-        return lines
+        return tokenlists, taglists
 
 def create_model_file(training_corpus):
     """ Function for creating trigram hidden Markov model using unigrams, bigrams, trigrams,
         word tag sequences, and their counts. The model is written onto a file in the library"""
 
-    input_text = _clean_text(training_corpus)
+    tokenlists, taglists = _clean_text(training_corpus)
 
     tag_size = 0
     tag_total = 0
 
-    with open('lib/model_file.txt', 'w+') as f:
+    #need to redesign this block
+    with open('data/model_file.txt', 'w+') as f:
         #clear file if contents already exist
         f.truncate(0)
 
@@ -145,6 +153,6 @@ def create_model_file(training_corpus):
 #Main driver used for debugging
 if __name__ == '__main__':
 
-    create_model_file('lib/train_corpus.txt')
+    _clean_text('data/train_corpus.txt')
 
 ##########################################################################################################
