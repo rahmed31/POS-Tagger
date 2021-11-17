@@ -1,6 +1,16 @@
 #!/usr/bin/env python3
 # # -*- coding: utf-8 -*-
-__author__ = "Raihan Ahmed"
+#-------------------------------------------------------------------------------------------
+#The purpose of this code is to provide the output of the model that's created when using
+#the Brown training corpus (data/train_corpus.txt) to train this Part of Speech (POS) tagger.
+#The model is written into a text file, which is subsequently saved to the data folder as model_file.txt.
+#This allows for easy visualization of what a Trigram HMM model could look like when creating
+#your own POS tagger!
+#
+#(C) 2021 Raihan Ahmed, Chicago, IL
+#Released under MIT License
+#email: rahmed10@neiu.edu
+#-------------------------------------------------------------------------------------------
 
 import sys
 import re
