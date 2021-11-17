@@ -105,7 +105,7 @@ def create_model_file(tokenlists, taglists):
     tag_size = 0
     tag_total = 0
 
-    with open('data/model_file.txt', 'w+') as f:
+    with open('data/model_data/model_file.txt', 'w+') as f:
         #clear file if contents already exist
         f.truncate(0)
 
@@ -154,9 +154,9 @@ if __name__ == '__main__':
     trigrams = pos_ngram(taglists, 3)
     emissions = emissions(tokenlists, taglists)
 
-    pickle.dump(unigrams, open("data/unigrams.pickle", "wb" ))
-    pickle.dump(bigrams, open("data/bigrams.pickle", "wb" ))
-    pickle.dump(trigrams, open("data/trigrams.pickle", "wb" ))
-    pickle.dump(emissions, open("data/emissions.pickle", "wb" ))
+    pickle.dump(unigrams, open("data/model_data/unigrams.pickle", "wb" ))
+    pickle.dump(bigrams, open("data/model_data/bigrams.pickle", "wb" ))
+    pickle.dump(trigrams, open("data/model_data/trigrams.pickle", "wb" ))
+    pickle.dump(emissions, open("data/model_data/emissions.pickle", "wb" ))
 
 ##########################################################################################################
