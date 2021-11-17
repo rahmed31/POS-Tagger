@@ -6,6 +6,10 @@ import sys
 import re
 import os
 
+START_SYMBOL = '*'
+STOP_SYMBOL = ' STOP'
+
+#get ngrams in tuple form
 def _pos_sequences(sentences, n):
     """ Function to find pos sequences of length 'n'. It returns a dictionary
         containing the corpus' pos sequences and their frequencies. This function specifically caters to files
@@ -15,7 +19,7 @@ def _pos_sequences(sentences, n):
 
     for sentence in sentences:
         #add n - 1 star symbols to the beginning of the list to account for ngrams of different size
-        tags_list = ((n - 1) * ['*'])
+        tags_list = ((n - 1) * [START_SYMBOL])
 
         for word in sentence.split(" "):
             pos = word.rsplit('/', 1)[1]
@@ -71,7 +75,7 @@ def _clean_text(training_corpus):
         print("Error: The input file does not appear to exist! Operation terminated.")
     else:
         #Split lines by new line character, remove empty lines, lowercase everything
-        lines = [line.lower().strip() for line in lines.splitlines() if len(line.strip()) != 0]
+        lines = [line.lower().strip() + STOP_SYMBOL for line in lines.splitlines() if len(line.strip()) != 0]
 
         #NEED TO REMOVE SPECIAL CHARACTERS NOT CLASSIFIED BY BROWN CORPUS POS GENERATOR!!!
 
@@ -123,6 +127,8 @@ def create_model_file(training_corpus):
         f.write("@tag_size@\t" + str(tag_size))
 
         f.close()
+
+def create_
 
     print("--------------------------------")
     print("Model file successfully created!")
