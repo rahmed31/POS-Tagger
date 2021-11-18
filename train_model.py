@@ -4,13 +4,15 @@
 #The purpose of this code is to provide the model output that's created when using the Brown training
 #corpus (data/train_corpus.txt) to train a Part of Speech (POS) tagger. The model is written into a
 #text file, which is subsequently saved to the data folder as model_file.txt. The purpose of the text file
-#is to provide an easy visualization of what a Trigram HMM model could look like when creating your own POS tagger!
-#Instead of using model_file.txt in further applications, the unigram, bigram, trigram, and emission dictionaries
-#will be pickled to provide quick and easy access for the POS tagger.
+#is to provide an easy visualization of what a Trigram HMM model could look like when first building your own POS tagger!
+#Keep in mind that this stage provides a raw (and inaccurate) model without interpolation or dealing with low frequency
+#words, but could still be usable as a first application. Instead of using model_file.txt in further applications,
+#the unigram, bigram, trigram, and emission dictionaries, along with the training corpus tokenlists and taglists,
+#will be pickled to provide quick and easy access for enhancing the Trigram HMM model in interpolations.py.
 #
 #
-#(C) 2021 Raihan Ahmed, Chicago, IL
-#Released under MIT License
+#Copyright (C) 2021, released under MIT License
+#Author: Raihan Ahmed, Chicago, IL
 #email: rahmed10@neiu.edu
 #-------------------------------------------------------------------------------------------
 
@@ -21,6 +23,7 @@ import pickle
 
 START_SYMBOL = '*'
 STOP_SYMBOL = 'STOP'
+output_path = 'data/model_data/'
 
 #get ngrams in tuple form
 def pos_ngram(taglists, n):
@@ -154,9 +157,11 @@ if __name__ == '__main__':
     trigrams = pos_ngram(taglists, 3)
     emissions = emissions(tokenlists, taglists)
 
-    pickle.dump(unigrams, open("data/model_data/unigrams.pickle", "wb" ))
-    pickle.dump(bigrams, open("data/model_data/bigrams.pickle", "wb" ))
-    pickle.dump(trigrams, open("data/model_data/trigrams.pickle", "wb" ))
-    pickle.dump(emissions, open("data/model_data/emissions.pickle", "wb" ))
+    pickle.dump(unigrams, open(output_path + "unigrams.pickle", "wb" ))
+    pickle.dump(bigrams, open(output_path + "bigrams.pickle", "wb" ))
+    pickle.dump(trigrams, open(output_path + "trigrams.pickle", "wb" ))
+    pickle.dump(emissions, open(output_path + "emissions.pickle", "wb" ))
+    pickle.dump(tokenlists, open(output_path + "tokenlists.pickle", "wb"))
+    pickle.dump(taglists, open(output_path + "taglists.pickle", "wb"))
 
 ##########################################################################################################
