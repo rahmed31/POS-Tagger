@@ -16,7 +16,6 @@
 #email: rahmed10@neiu.edu
 #-------------------------------------------------------------------------------------------
 
-import sys
 import re
 import os
 import pickle
