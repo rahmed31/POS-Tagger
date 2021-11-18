@@ -70,11 +70,11 @@ def emissions(tokenlists, taglists):
     return sortedemissions
 
 def clean_text(training_corpus):
-    """ Function used for cleaning text from training data that follows the format of the Brown corpus. Closed
+    """ Function used for cleaning text from data that follows the format of the Brown corpus. Closed
         category words and punctuation are not removed to be able to ensure that training sentences are
         syntactically sound. The first return value is a list that contains distinct lists holding the tokens
         for each sentence in the training corpus. The second return value is a list that contains distinct
-        lists holding the parts of speech present for each sentence in the training corpus. """
+        lists holding the parts of speech present for each sentence in the corpus. """
 
     try:
         #read text file
