@@ -53,7 +53,6 @@ def high_freq(tokenlists):
     for token, count in word_c.items():
         if count >= MAX_FREQ_RARE:
             known_words.add(token)
-            kw.append(token)
 
     return known_words
 
