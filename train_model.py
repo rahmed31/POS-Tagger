@@ -4,11 +4,15 @@
 #The purpose of this code is to provide the model output that's created when using the Brown training
 #corpus (data/train_corpus.txt) to train a Part of Speech (POS) tagger. The model is written into a
 #text file, which is subsequently saved to the data folder as model_file.txt. The purpose of the text file
-#is to provide an easy visualization of what a Trigram HMM model could look like when first building your own POS tagger!
+#is to provide an easy visualization of what a Trigram HMM model will look like when first building your own POS tagger!
 #Keep in mind that this stage provides a raw (and inaccurate) model without interpolation or dealing with low frequency
-#words, but could still be usable as a first application. Instead of using model_file.txt in further applications,
-#the unigram, bigram, trigram, and emission dictionaries, along with the training corpus tokenlists and taglists,
+#words, but could still be usable as a first application. Instead of using model_file.txt beyond this point,
+#the unigram, bigram, and trigram dictionaries, along with the training corpus tokenlists and taglists,
 #will be pickled to provide quick and easy access for enhancing the Trigram HMM model in interpolations.py.
+#The emissions count dictionary created in this script will NOT be reused any further, as emission probabilities will
+#instead need to be calculated after modifying low frequency words that appear in the training corpus. This will
+#allow us to generalize the POS tagging trigram HMM model in order to provide more accurate results when predicting POS
+#tags for the test corpus.
 #
 #
 #Copyright (C) 2021, released under MIT License
@@ -53,7 +57,9 @@ def pos_ngram(taglists, n):
 def emissions(tokenlists, taglists):
     """ Function to find emission counts for each word and their associated POS tag. It returns a dictionary
         containing the corpus' emission counts for each token/tag tuple. This function specifically caters to files
-        with the format of the Brown corpus. Runtime complexity: O(n^2) """
+        with the format of the Brown corpus. This function will be modified for reuse in interpolations.py to
+        calculate emission probabilities after taking into account low frequency words that appear in the training corpus.
+        Runtime complexity: O(n^2) """
 
     emissions = {}
 
@@ -162,7 +168,6 @@ if __name__ == '__main__':
     pickle.dump(unigrams, open(output_path + "unigrams.pickle", "wb" ))
     pickle.dump(bigrams, open(output_path + "bigrams.pickle", "wb" ))
     pickle.dump(trigrams, open(output_path + "trigrams.pickle", "wb" ))
-    pickle.dump(emissions, open(output_path + "emissions.pickle", "wb" ))
     pickle.dump(tokenlists, open(output_path + "tokenlists.pickle", "wb"))
     pickle.dump(taglists, open(output_path + "taglists.pickle", "wb"))
 
