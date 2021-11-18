@@ -91,6 +91,9 @@ def clean_text(training_corpus):
         #Remove extra spaces between words
         lines = [re.sub(' +', ' ', line) for line in lines]
 
+        #Lowercase first word in each sentence
+        lines = [line[0].lower() + line[1:] for line in lines]
+
         tokenlists = [[wordtag.rsplit('/', 1)[0] for wordtag in line.strip().split(" ")] for line in lines]
 
         taglists = [[wordtag.rsplit('/', 1)[-1] for wordtag in line.strip().split(" ")] for line in lines]
