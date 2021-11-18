@@ -86,7 +86,7 @@ def clean_text(training_corpus):
         print("Error: The input file does not appear to exist! Operation terminated.")
     else:
         #Split lines by new line character, remove empty lines, lowercase everything
-        lines = [line.lower().strip() for line in lines.splitlines() if len(line.strip()) != 0]
+        lines = [line.strip() for line in lines.splitlines() if len(line.strip()) != 0]
 
         #Remove extra spaces between words
         lines = [re.sub(' +', ' ', line) for line in lines]
