@@ -163,7 +163,6 @@ if __name__ == '__main__':
     unigrams = pos_ngram(taglists, 1)
     bigrams = pos_ngram(taglists, 2)
     trigrams = pos_ngram(taglists, 3)
-    emissions = emissions(tokenlists, taglists)
 
     pickle.dump(unigrams, open(output_path + "unigrams.pickle", "wb" ))
     pickle.dump(bigrams, open(output_path + "bigrams.pickle", "wb" ))
