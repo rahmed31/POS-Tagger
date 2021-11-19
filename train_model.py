@@ -23,6 +23,7 @@
 import re
 import os
 import pickle
+import time
 
 START_SYMBOL = '*'
 STOP_SYMBOL = 'STOP'
@@ -156,6 +157,8 @@ def create_model_file(tokenlists, taglists):
 #Main driver used for debugging
 if __name__ == '__main__':
 
+    start = time.perf_counter()
+
     tokenlists, taglists = clean_text('data/train_corpus.txt')
 
     create_model_file(tokenlists, taglists)
@@ -169,5 +172,8 @@ if __name__ == '__main__':
     pickle.dump(trigrams, open(output_path + "trigrams.pickle", "wb" ))
     pickle.dump(tokenlists, open(output_path + "tokenlists.pickle", "wb"))
     pickle.dump(taglists, open(output_path + "taglists.pickle", "wb"))
+
+    finish = time.perf_counter()
+    print(f'Finished in {round(finish-start, 2)} second(s)')
 
 ##########################################################################################################

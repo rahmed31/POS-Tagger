@@ -19,12 +19,14 @@
 import re
 import os
 import pickle
-from collections import defaultdict
 import math
+from collections import defaultdict
+import time
 
 output_path = 'data/model_data/'
-MAX_FREQ_RARE = 5
 RARE_SYMBOL = '_RARE_'
+MAX_FREQ_RARE = 5
+LOG_ZERO = -1000
 
 #function for retrieving high frequency words from training corpus
 def high_freq(tokenlists):
@@ -32,13 +34,13 @@ def high_freq(tokenlists):
         used when applying to Viterbi algorithm for POS tagging on the test corpus. """
 
     known_words = set()
-    word_c = defaultdict(int)
+    word_count = defaultdict(int)
 
     for tokenlist in tokenlists:
         for token in tokenlist:
-            word_c[token] += 1
+            word_count[token] += 1
 
-    for token, count in word_c.items():
+    for token, count in word_count.items():
         if count >= MAX_FREQ_RARE:
             known_words.add(token)
 
@@ -52,12 +54,12 @@ def replace_rare(tokenlists, known_words):
     for i, tokenlist in enumerate(tokenlists):
         for j, token in enumerate(tokenlist):
             if token not in known_words:
-                tokenlists[i][j] = subcategorize(token)
+                tokenlists[i][j] = morphosyntactic_subcategorize(token)
 
     return tokenlists
 
 #Not sure how accurate this will be...
-def subcategorize(word):
+def morphosyntactic_subcategorize(word):
     if not re.search(r'\w', word):
         return '_PUNCS_'
     elif re.search(r'[A-Z]', word):
@@ -102,6 +104,8 @@ def emission_probs(tokenlists, taglists):
 
 if __name__ == '__main__':
 
+    start = time.perf_counter()
+
     unigrams = dict(pickle.load(open(output_path + "unigrams.pickle", "rb" )))
     bigrams = dict(pickle.load(open(output_path + "bigrams.pickle", "rb" )))
     trigrams = dict(pickle.load(open(output_path + "trigrams.pickle", "rb" )))
@@ -118,10 +122,15 @@ if __name__ == '__main__':
     # print(tokenlists)
 
     #find emission probabilities for each word/tag pair, and retreive a set containing all possible tags
-    #for this dataset
+    #for this dataset to be later used by the viterbi algorithm
     e_probs, pos_set = emission_probs(tokenlists, taglists)
-    print(e_probs)
-    # print(pos_set)
+
+    e_probs = pickle.dump(e_probs, open(output_path + "e_probs.pickle", "wb" ))
+    pos_set = pickle.dump(pos_set, open(output_path + "pos_set.pickle", "wb" ))
+
+
+    finish = time.perf_counter()
+    print(f'Finished in {round(finish-start, 2)} second(s)')
 
 ###############################################################################################################
 
