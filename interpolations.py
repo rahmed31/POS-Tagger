@@ -20,11 +20,13 @@ import re
 import os
 import pickle
 import math
-from collections import defaultdict
 import time
+import numpy as np
+from collections import defaultdict
 
 output_path = 'data/model_data/'
 RARE_SYMBOL = '_RARE_'
+START_SYMBOL = '*'
 MAX_FREQ_RARE = 5
 LOG_ZERO = -1000
 
@@ -77,7 +79,6 @@ def morphosyntactic_subcategorize(word):
     else:
         return RARE_SYMBOL
 
-#!!!NEED TO TEST THIS FUNCTION!!!
 def emission_probs(tokenlists, taglists):
     """ Function to find emission counts for each word/tag pair after replacing low frequency words with their
         generalized form. It returns a dictionary containing the corpus' emission probabilities for each token/tag tuple.
@@ -96,11 +97,64 @@ def emission_probs(tokenlists, taglists):
 
     return e_values, tagset
 
-# def transition_probs():
-#
-#
-# #this method is called by transition_probs() to approximate probabilities for unseen trigrams
-# def deleted_interpolation():
+def transition_probs(taglists, unigrams, bigrams, trigrams):
+    unigram_total = sum(unigrams.values())
+    unigram_p = {(a,): math.log(unigrams[(a,)], 2) - math.log(unigram_total, 2) for a, in unigrams}
+
+    unigrams[START_SYMBOL] = len(taglists)
+    bigram_p = {(a, b): math.log(bigrams[(a, b)], 2) - math.log(unigrams[(a,)], 2) for a, b in bigrams}
+
+    bigrams[(START_SYMBOL, START_SYMBOL)] = len(taglists)
+    trigram_p = {(a, b, c): math.log(trigrams[(a, b, c)], 2) - math.log(bigrams[(a, b)], 2) for a, b, c in trigrams}
+
+    weights = deleted_interpolation(unigrams, bigrams, trigrams)
+
+    #might need to fix this portion
+    trigram_d = {trigram: math.log(0.1 * count, 2) - math.log(weights[1] * bigrams[trigram[:-1]], 2) for trigram, count in trigrams.items()}
+
+    # print(trigram_d)
+
+    return unigram_p, bigram_p, trigram_p, trigram_d
+
+#this method is called by transition_probs() to approximate probabilities for unseen trigrams
+#needs fix
+def deleted_interpolation(unigrams, bigrams, trigrams):
+    lambda1 = 0
+    lambda2 = 0
+    lambda3 = 0
+
+    for a, b, c in trigrams.keys():
+        v = trigrams[(a, b, c)]
+
+        if v > 0:
+
+            try:
+                c1 = (v - 1) / (bigrams[(a, b)] - 1)
+            except:
+                c1 = 0
+            try:
+                c2 = (bigrams[(a, b)] - 1) / (unigrams[(a,)] - 1)
+            except:
+                c2 = 0
+            try:
+                c3 = (unigrams[(a,)] - 1) / (sum(unigrams.values()) - 1)
+            except:
+                c3 = 0
+
+            clist = [c1, c2, c3]
+            m = np.argmax(clist)
+
+            if m == 0:
+                lambda3 += v
+            if m == 1:
+                lambda2 += v
+            if m == 2:
+                lambda3 += v
+
+    weights = [lambda1, lambda2, lambda3]
+    weights = [a / sum(weights) for a in weights]
+
+    return weights
 
 if __name__ == '__main__':
 
@@ -128,6 +182,8 @@ if __name__ == '__main__':
     e_probs = pickle.dump(e_probs, open(output_path + "e_probs.pickle", "wb" ))
     pos_set = pickle.dump(pos_set, open(output_path + "pos_set.pickle", "wb" ))
 
+    q_probs = transition_probs(taglists, unigrams, bigrams, trigrams)
+    q_probs = pickle.dump(q_probs, open(output_path + "q_probs.pickle", "wb" ))
 
     finish = time.perf_counter()
     print(f'Finished in {round(finish-start, 2)} second(s)')
