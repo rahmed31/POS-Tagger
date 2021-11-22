@@ -28,7 +28,6 @@ output_path = 'data/model_data/'
 RARE_SYMBOL = '_RARE_'
 START_SYMBOL = '*'
 MAX_FREQ_RARE = 5
-LOG_ZERO = -1000
 
 #function for retrieving high frequency words from training corpus
 def high_freq(tokenlists):
@@ -107,54 +106,10 @@ def transition_probs(taglists, unigrams, bigrams, trigrams):
     bigrams[(START_SYMBOL, START_SYMBOL)] = len(taglists)
     trigram_p = {(a, b, c): math.log(trigrams[(a, b, c)], 2) - math.log(bigrams[(a, b)], 2) for a, b, c in trigrams}
 
-    weights = deleted_interpolation(unigrams, bigrams, trigrams)
-
-    #might need to fix this portion
-    trigram_d = {trigram: math.log(0.1 * count, 2) - math.log(weights[1] * bigrams[trigram[:-1]], 2) for trigram, count in trigrams.items()}
-
-    # print(trigram_d)
+    #will need to experimentally determine lambda values by applying the viterbi algorithm in a for loop to maximize accuracy
+    trigram_d = {(a, b , c): math.log(0.3 * (2**trigram_p[(a, b, c)]) + 0.4 * (2**bigram_p[(b, c)]) + 0.3 * (2**unigram_p[(c,)]), 2) for a, b, c in trigram_p}
 
     return unigram_p, bigram_p, trigram_p, trigram_d
-
-#this method is called by transition_probs() to approximate probabilities for unseen trigrams
-#needs fix
-def deleted_interpolation(unigrams, bigrams, trigrams):
-    lambda1 = 0
-    lambda2 = 0
-    lambda3 = 0
-
-    for a, b, c in trigrams.keys():
-        v = trigrams[(a, b, c)]
-
-        if v > 0:
-
-            try:
-                c1 = (v - 1) / (bigrams[(a, b)] - 1)
-            except:
-                c1 = 0
-            try:
-                c2 = (bigrams[(a, b)] - 1) / (unigrams[(a,)] - 1)
-            except:
-                c2 = 0
-            try:
-                c3 = (unigrams[(a,)] - 1) / (sum(unigrams.values()) - 1)
-            except:
-                c3 = 0
-
-            clist = [c1, c2, c3]
-            m = np.argmax(clist)
-
-            if m == 0:
-                lambda3 += v
-            if m == 1:
-                lambda2 += v
-            if m == 2:
-                lambda3 += v
-
-    weights = [lambda1, lambda2, lambda3]
-    weights = [a / sum(weights) for a in weights]
-
-    return weights
 
 if __name__ == '__main__':
 
@@ -178,95 +133,17 @@ if __name__ == '__main__':
     #find emission probabilities for each word/tag pair, and retreive a set containing all possible tags
     #for this dataset to be later used by the viterbi algorithm
     e_probs, pos_set = emission_probs(tokenlists, taglists)
+    # print(e_probs)
 
     e_probs = pickle.dump(e_probs, open(output_path + "e_probs.pickle", "wb" ))
     pos_set = pickle.dump(pos_set, open(output_path + "pos_set.pickle", "wb" ))
 
+    #find transition probabilities for each trigram; to be later used by the viterbi algorithm
     q_probs = transition_probs(taglists, unigrams, bigrams, trigrams)
+    # print(q_probs)
     q_probs = pickle.dump(q_probs, open(output_path + "q_probs.pickle", "wb" ))
 
     finish = time.perf_counter()
     print(f'Finished in {round(finish-start, 2)} second(s)')
 
 ###############################################################################################################
-
-
-# #helper function for subcategorizing rare words in the training corpus
-# def replace_rare(tokenlists, known_words):
-#     """ Function to replace (a.k.a "generalize") low frequency words that appear in the training
-#         corpus. """
-#
-#     for i, tokenlist in enumerate(tokenlists):
-#         for j, token in enumerate(tokenlist):
-#             if token not in known_words:
-#                 tokenlists[i][j] = subcategorize(token)
-#
-#     return tokenlists
-#
-#     # copy = emissions.copy()
-#     #
-#     # for (word, tag), value in copy.items():
-#     #     if value < MAX_FREQ_RARE:
-#     #         category = subcategorize(word)
-#     #         new_key = category, tag
-#     #         del emissions[(word, tag)]
-#     #
-#     #         if new_key in emissions:
-#     #             emissions[new_key] += value
-#     #         else:
-#     #             emissions.update({new_key : value})
-#     #
-#     # return dict(sorted(emissions.items(), key=lambda x: x[1], reverse = True))
-
-
-# #calculate emissions probabilities after executing replace_rare() functions
-# def emission_probs(emissions, unigrams):
-#     """ Function to calculate the emissions probabilities for each word/tag pair after applying
-#         the replace_rare() function to generalize low frequency words in the training corpus. """
-#
-#     e_probs = {}
-#
-#     for (word, tag), value in emissions.items():
-#         if not (word, tag) in e_probs:
-#             e_probs[(word, tag)] = value/unigrams[(tag,)]
-#
-#     return e_probs
-
-
-
-# #!!!NEED TO TEST THIS FUNCTION!!!
-# def emission_probs(tokenlists, taglists):
-#     """ Function to find emission counts for each word/tag pair after replacing low frequency words with their
-#         generalized form. It returns a dictionary containing the corpus' emission probabilities for each token/tag tuple.
-#         This function specifically caters to files with the format of the Brown corpus. Runtime complexity: O(n^2) """
-#
-#     e_values_c = defaultdict(int)
-#     tag_c = defaultdict(int)
-#
-#     for sent_words, sent_tags in zip(tokenlists, taglists):
-#         for word, tag in zip(sent_words, sent_tags):
-#             e_values_c[(word, tag)] += 1
-#             tag_c[tag] += 1
-#
-#     e_values = {(word, tag): math.log(e_values_c[(word, tag)], 2) - math.log(tag_c[tag], 2) for word, tag in e_values_c}
-#     taglist = set(tag_c)
-#
-#     return e_values, taglist
-#     # emissions = {}
-#     # e_probs = {}
-#     #
-#     # for tokenlist, taglist in zip(tokenlists, taglists):
-#     #     for token, tag in zip(tokenlist, taglist):
-#     #         if (token, tag) in emissions:
-#     #             emissions[(token, tag)] += 1
-#     #         else:
-#     #             emissions.update({(token, tag) : 1})
-#     #
-#     # for (word, tag), value in emissions.items():
-#     #     if not (word, tag) in e_probs:
-#     #         e_probs[(word, tag)] = value/unigrams[(tag,)]
-#     #
-#     # #sort e_probs dictionary from greatest count to lowest count
-#     # e_probs = dict(sorted(e_probs.items(), key=lambda x: x[1], reverse = True))
-#     #
-#     # return e_probs
