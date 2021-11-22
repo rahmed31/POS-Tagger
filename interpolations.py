@@ -124,6 +124,7 @@ if __name__ == '__main__':
 
     #getting high frequency and low frequency words from training corpus
     known_words = high_freq(tokenlists)
+    known_words = pickle.dump(known_words, open(output_path + "known_words.pickle", "wb" ))
     #print(known_words)
 
     #replacing low frequency words that appear in the training corpus with their generalized form
@@ -138,10 +139,10 @@ if __name__ == '__main__':
     e_probs = pickle.dump(e_probs, open(output_path + "e_probs.pickle", "wb" ))
     pos_set = pickle.dump(pos_set, open(output_path + "pos_set.pickle", "wb" ))
 
-    #find transition probabilities for each trigram; to be later used by the viterbi algorithm
-    q_probs = transition_probs(taglists, unigrams, bigrams, trigrams)
-    # print(q_probs)
-    q_probs = pickle.dump(q_probs, open(output_path + "q_probs.pickle", "wb" ))
+    # #find transition probabilities for each trigram; to be later used by the viterbi algorithm
+    # q_probs = transition_probs(taglists, unigrams, bigrams, trigrams)
+    # # print(q_probs)
+    # q_probs = pickle.dump(q_probs, open(output_path + "q_probs.pickle", "wb" ))
 
     finish = time.perf_counter()
     print(f'Finished in {round(finish-start, 2)} second(s)')
