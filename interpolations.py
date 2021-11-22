@@ -59,7 +59,6 @@ def replace_rare(tokenlists, known_words):
 
     return tokenlists
 
-#Not sure how accurate this will be...
 def morphosyntactic_subcategorize(word):
     if not re.search(r'\w', word):
         return '_PUNCS_'
@@ -124,8 +123,6 @@ if __name__ == '__main__':
 
     #getting high frequency and low frequency words from training corpus
     known_words = high_freq(tokenlists)
-    known_words = pickle.dump(known_words, open(output_path + "known_words.pickle", "wb" ))
-    #print(known_words)
 
     #replacing low frequency words that appear in the training corpus with their generalized form
     tokenlists = replace_rare(tokenlists, known_words)
@@ -134,10 +131,12 @@ if __name__ == '__main__':
     #find emission probabilities for each word/tag pair, and retreive a set containing all possible tags
     #for this dataset to be later used by the viterbi algorithm
     e_probs, pos_set = emission_probs(tokenlists, taglists)
+    # print(pos_set)
     # print(e_probs)
 
     e_probs = pickle.dump(e_probs, open(output_path + "e_probs.pickle", "wb" ))
     pos_set = pickle.dump(pos_set, open(output_path + "pos_set.pickle", "wb" ))
+    known_words = pickle.dump(known_words, open(output_path + "known_words.pickle", "wb" ))
 
     # #find transition probabilities for each trigram; to be later used by the viterbi algorithm
     # q_probs = transition_probs(taglists, unigrams, bigrams, trigrams)
