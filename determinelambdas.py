@@ -12,9 +12,24 @@
 import math
 import time
 import pickle
+from interpolations import replace_rare
 
 output_path = 'data/model_data/'
 LOG_ZERO = -1000
+
+def experimental_loop(taglists, unigrams, bigrams, trigrams):
+    for i in range(0.001, 1, 0.001):
+        for j in range():
+            for k in range():
+                q_values = transition_probs(taglists, unigrams, bigrams, trigrams)
+
+                tags = viterbi(brown_dev_words, taglist, known_words, q_values, e_values)
+
+                accuracy = calculate_accuracy(tags, brown_dev_words)
+
+def calculate_accuracy(tags, brown_dev_words):
+
+
 
 def transition_probs(taglists, unigrams, bigrams, trigrams):
     unigram_total = sum(unigrams.values())
