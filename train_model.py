@@ -4,15 +4,15 @@
 #The purpose of this code is to provide the model output that's created when using the Brown training
 #corpus (data/train_corpus.txt) to train a Part of Speech (POS) tagger. The model is written into a
 #text file, which is subsequently saved to the data folder as model_file.txt. The purpose of the text file
-#is to provide an easy visualization of what a Trigram HMM model will look like when first building your own POS tagger!
-#Keep in mind that this stage provides a raw (and inaccurate) model without interpolation or dealing with low frequency
-#words, but could still be usable as a first application. Instead of using model_file.txt beyond this point,
-#the unigram, bigram, and trigram dictionaries, along with the training corpus tokenlists and taglists,
-#will be pickled to provide quick and easy access for enhancing the Trigram HMM model in interpolations.py.
-#The emissions count dictionary created in this script will NOT be reused any further, as emission probabilities will
-#instead need to be calculated after modifying low frequency words that appear in the training corpus. This will
-#allow us to generalize the POS tagging trigram HMM model in order to provide more accurate results when predicting POS
-#tags for the test corpus.
+#is to provide an easy visualization of what a Trigram HMM model will look like when first building your own POS tagger.
+#Keep in mind that this stage provides a raw (and understandably inaccurate) model without interpolation or dealing
+#with low frequency words, but could still be usable as a first application. Beyond this point, only
+#the unigram, bigram, and trigram dictionaries and the training corpus tokenlists and taglists will
+#be pickled to provide quick and easy access for enhancing the Trigram HMM model in interpolations.py.
+#The emissions count dictionary created in this script will NOT be reused any further, as emission probabilities willl
+#be calculated after having dealt low frequency words that appear in the training corpus. This will
+#allow us to better generalize the POS tagging trigram HMM model in order to provide more accurate results
+#when predicting POS tags for the test corpus.
 #
 #
 #Copyright (C) 2021, released under MIT License
@@ -32,8 +32,8 @@ output_path = 'data/model_data/'
 #get ngrams in tuple form
 def pos_ngram(taglists, n):
     """ Function to find pos ngrams of length 'n'. It returns a dictionary containing the corpus'
-        pos sequences in tuple form and their frequencies. This function specifically caters to files
-        with the format of the Brown corpus. Runtime complexity: O(n^2) """
+        pos sequences in n-tuple form and their frequencies. This function specifically caters to files
+        with the same format as the Brown corpus. Runtime complexity: O(n^2) """
 
     tag_sequences = {}
 
@@ -57,8 +57,8 @@ def pos_ngram(taglists, n):
 
 def emission_counts(tokenlists, taglists):
     """ Function to find emission counts for each word and their associated POS tag. It returns a dictionary
-        containing the corpus' emission counts for each token/tag tuple. This function specifically caters to files
-        with the format of the Brown corpus. This function will be modified for reuse in interpolations.py to
+        containing the corpus' emission counts for each token/tag pair. This function specifically caters to files
+        with the format of the Brown corpus. This function will also be modified for reuse in interpolations.py to
         calculate emission probabilities after taking into account low frequency words that appear in the training corpus.
         Runtime complexity: O(n^2) """
 
