@@ -77,9 +77,10 @@ def morphosyntactic_subcategorize(word):
         return RARE_SYMBOL
 
 def emission_probs(tokenlists, taglists):
-    """ Function to find emission counts for each word/tag pair after replacing low frequency words with their
-        generalized form. It returns a dictionary containing the corpus' emission probabilities for each token/tag tuple.
-        This function specifically caters to files with the format of the Brown corpus. Runtime complexity: O(n^2) """
+    """ Function to find log emission probabilities for each word/tag pair after replacing low frequency words with their
+        generalized form. It returns a dictionary containing the corpus' log emission probabilities for each token/tag pair
+        present in the training corpus. This function specifically caters to files with the format of the Brown corpus.
+        Runtime complexity: O(n^2) """
 
     e_values_c = defaultdict(int)
     tag_c = defaultdict(int)
