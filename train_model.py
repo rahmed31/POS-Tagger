@@ -55,7 +55,7 @@ def pos_ngram(taglists, n):
 
     return sorted_tag_sequences
 
-def emissions(tokenlists, taglists):
+def emission_counts(tokenlists, taglists):
     """ Function to find emission counts for each word and their associated POS tag. It returns a dictionary
         containing the corpus' emission counts for each token/tag tuple. This function specifically caters to files
         with the format of the Brown corpus. This function will be modified for reuse in interpolations.py to
@@ -111,7 +111,7 @@ def clean_text(training_corpus):
 
 def create_model_file(tokenlists, taglists):
     """ Function for creating trigram hidden Markov model using POS unigrams, bigrams, trigrams, and
-        word/tag pairs with their emissions. The model is written onto a text file in: data > model_data.
+        word/tag pairs with their emission counts. The model is written onto a text file in: data > model_data.
         The file is for visual and instructional purposes only. It will not be used when creating the POS tagger. """
 
     tag_size = 0
@@ -138,8 +138,8 @@ def create_model_file(tokenlists, taglists):
             string = str(key) + '\t' + str(value)
             f.write(string + '\n')
 
-        f.write('@emissions@' + '\n')
-        for key, value in emissions(tokenlists, taglists):
+        f.write('@emission_counts@' + '\n')
+        for key, value in emission_counts(tokenlists, taglists):
             string = str(key) + '\t' + str(value)
             f.write(string + '\n')
 
