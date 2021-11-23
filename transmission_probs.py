@@ -23,9 +23,15 @@ from viterbi import viterbi_algorithm
 from interpolations import replace_rare
 
 output_path = 'data/model_data/'
-LOG_ZERO = -1000
 
+#INCOMPLETE FUNCTION
 def find_lambdas(taglists, unigrams, bigrams, trigrams):
+    """ Function to experimentally determine the hyperparameters (i.e., lambda values) for the deleted interpolation
+        algorithm. This function utilizes a 10-fold cross validation technique to determine which lambda values maximize
+        the accuracy of the viterbi algorithm when determining the POS tags for the validation sets. It returns a list containing
+        the lambda values and a dictionary containing the log transition probabilities for each POS trigram present in the training
+        corpus. This function specifically caters to files with the format of the Brown corpus. Runtime complexity: O(n^2) """
+
     max_accuracy = 0
     lambda_values = []
     q_values = {}
@@ -35,7 +41,7 @@ def find_lambdas(taglists, unigrams, bigrams, trigrams):
             for k in range():
                 log_values = transition_probs(taglists, unigrams, bigrams, trigrams, [i, j, k])
 
-                # tags = viterbi(brown_dev_words, taglist, known_words, q_values, e_values)
+                # tags = viterbi_algorithm(brown_dev_words, taglist, known_words, q_values, e_values)
                 #
                 # accuracy = calculate_accuracy(tags, brown_dev_words)
 
@@ -46,11 +52,21 @@ def find_lambdas(taglists, unigrams, bigrams, trigrams):
 
     return lambda_values, q_values
 
+#INCOMPLETE FUNCTION
 # def calculate_accuracy(tags, brown_dev_words):
+    """ Function to calculate the accuracy of the Viterbi algorithm by comparing the output of the POS tagger to the actual tags
+        provided in each validation set. """
 
 
+
+
+        # return accuracy
 
 def transition_probs(taglists, unigrams, bigrams, trigrams, lambdas):
+    """ Function to find log transition probabilities for each POS trigram in the training corpus using deleted interpolation.
+        It returns a dictionary containing the corpus' log transition probabilities for each POS trigram present in the training corpus.
+        This function specifically caters to files with the format of the Brown corpus. Runtime complexity: O(n^2) """
+
     unigram_total = sum(unigrams.values())
     unigram_p = {(a,): math.log(unigrams[(a,)], 2) - math.log(unigram_total, 2) for a, in unigrams}
 
