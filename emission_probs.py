@@ -2,13 +2,14 @@
 # # -*- coding: utf-8 -*-
 #-------------------------------------------------------------------------------------------
 #The purpose of this file is to calculate the probabilities of all unigrams, bigrams, and trigrams
-#that occur in the training corpus, as well as emission probabilities for each word/tag pair. These
-#probabilities allow our model to predict the POS tags for the test corpus. To remedy the issue of
-#unseen trigrams or unrecognized words in the test corpus, interpolation is necessary to approximate
-#the probability of each POS tag sequence when assigning them. The deleted interpolation algorithm is
-#used to achieve this, along with generalizing low frequency words in the training corpus
-#where count < 5 so that unknown words that appear in the test corpus (which will also be generalized)
-#can still be predicted with a non zero probability.
+#that occur in the training corpus, as well as emission probabilities for each word/tag pair. This
+#file also collects the set of all POS tags that are present in the test corpus. These probabilities
+#allow our model to predict the POS tags for the test corpus. To remedy the issue of unseen words
+#that occur in the test corpus, which would normally result in a '0' emission probability, low frequency
+#words in the training corpus (i.e., words that occur 5 times or less) are generalized by mapping them
+#to their determined part of speech using morphosyntactic subcategorization. This allows unseen words
+#in the test corpus to be predicted with a non-zero probability since unseen words in the test corpus
+#will also be mapped to their morphosyntactic subcategory.
 #
 #
 #Copyright (C) 2021, released under MIT License
@@ -17,11 +18,9 @@
 #-------------------------------------------------------------------------------------------
 
 import re
-import os
-import pickle
 import math
 import time
-import numpy as np
+import pickle
 from collections import defaultdict
 
 output_path = 'data/model_data/'
@@ -95,21 +94,6 @@ def emission_probs(tokenlists, taglists):
 
     return e_values, tagset
 
-def transition_probs(taglists, unigrams, bigrams, trigrams):
-    unigram_total = sum(unigrams.values())
-    unigram_p = {(a,): math.log(unigrams[(a,)], 2) - math.log(unigram_total, 2) for a, in unigrams}
-
-    unigrams[START_SYMBOL] = len(taglists)
-    bigram_p = {(a, b): math.log(bigrams[(a, b)], 2) - math.log(unigrams[(a,)], 2) for a, b in bigrams}
-
-    bigrams[(START_SYMBOL, START_SYMBOL)] = len(taglists)
-    trigram_p = {(a, b, c): math.log(trigrams[(a, b, c)], 2) - math.log(bigrams[(a, b)], 2) for a, b, c in trigrams}
-
-    #will need to experimentally determine lambda values by applying the viterbi algorithm in a for loop to maximize accuracy
-    trigram_d = {(a, b , c): math.log(0.3 * (2**trigram_p[(a, b, c)]) + 0.4 * (2**bigram_p[(b, c)]) + 0.3 * (2**unigram_p[(c,)]), 2) for a, b, c in trigram_p}
-
-    return unigram_p, bigram_p, trigram_p, trigram_d
-
 if __name__ == '__main__':
 
     start = time.perf_counter()
@@ -123,6 +107,7 @@ if __name__ == '__main__':
 
     #getting high frequency and low frequency words from training corpus
     known_words = high_freq(tokenlists)
+    # print(known_words)
 
     #replacing low frequency words that appear in the training corpus with their generalized form
     tokenlists = replace_rare(tokenlists, known_words)
@@ -132,16 +117,12 @@ if __name__ == '__main__':
     #for this dataset to be later used by the viterbi algorithm
     e_probs, pos_set = emission_probs(tokenlists, taglists)
     # print(pos_set)
+    # print(len(pos_set))
     # print(e_probs)
 
     e_probs = pickle.dump(e_probs, open(output_path + "e_probs.pickle", "wb" ))
     pos_set = pickle.dump(pos_set, open(output_path + "pos_set.pickle", "wb" ))
     known_words = pickle.dump(known_words, open(output_path + "known_words.pickle", "wb" ))
-
-    # #find transition probabilities for each trigram; to be later used by the viterbi algorithm
-    # q_probs = transition_probs(taglists, unigrams, bigrams, trigrams)
-    # # print(q_probs)
-    # q_probs = pickle.dump(q_probs, open(output_path + "q_probs.pickle", "wb" ))
 
     finish = time.perf_counter()
     print(f'Finished in {round(finish-start, 2)} second(s)')
