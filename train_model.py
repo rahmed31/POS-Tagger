@@ -22,8 +22,8 @@
 
 import re
 import os
-import pickle
 import time
+import pickle
 
 START_SYMBOL = '*'
 STOP_SYMBOL = 'STOP'
