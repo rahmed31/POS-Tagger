@@ -13,7 +13,12 @@ import math
 import time
 import pickle
 
+output_path = 'data/model_data/'
+LOG_ZERO = -1000
+
 def viterbi_algorithm(brown_dev_words, taglist, known_words, q_values, e_values):
+    """ Applying the Viterbi algorithm with time complexity O(k^2*n) """
+
     tagged = []
 
     # pi[(k, u, v)]: max probability of a tag sequence ending in tags u, v at position k
