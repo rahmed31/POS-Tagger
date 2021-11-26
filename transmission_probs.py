@@ -34,13 +34,13 @@ def lambda_candidates(start, end, step):
 
     result = []
 
-    for i in range(len(l1)):
-        for j in range(len(l1)):
-            for k in range(len(l1)):
+    for i in range(len(l)):
+        for j in range(len(l)):
+            for k in range(len(l)):
                 if (l[i] + l[j] + l[k] == 1):
-                    result.append([l[i], l[j], l[k]])
+                    result.append(tuple((l[i], l[j], l[k])))
 
-    return l
+    return result
 
 def find_lambdas(candidate_values, test_set, taglists, unigrams, bigrams, trigrams, e_values):
     """ Function to experimentally determine the hyperparameters (i.e., lambda values) for the deleted interpolation
@@ -109,12 +109,13 @@ if __name__ == '__main__':
     known_words = pickle.load(open(output_path + "known_words.pickle", "rb" ))
     pos_set = pickle.load(open(output_path + "pos_set.pickle", "rb" ))
 
-    candidate_values = lambda_candidates(0.001, 1, 0.001)
+    # candidate_values = lambda_candidates(0.001, 1, 0.001)
+    # candidate_values = pickle.dump(candidate_values, open(output_path + "candidate_values.pickle", "wb"))
+    candidate_values = pickle.load(open(output_path + "candidate_values.pickle", "rb"))
 
     # lambda_values, q_values = find_lambdas(candidate_values, taglists, unigrams, bigrams, trigrams, e_values)
     # print(q_probs)
 
-    candidate_values = pickle.dump(candidate_values, open(output_path + "candidate_values.pickle", "wb"))
     # q_probs = pickle.dump(q_probs, open(output_path + "q_probs.pickle", "wb" ))
     # lambda_values = pickle.dump(lambda_values, open(output_path + "lamnda_values.pickle", "wb" ))
 
