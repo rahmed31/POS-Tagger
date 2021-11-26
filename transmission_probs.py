@@ -38,7 +38,7 @@ def lambda_candidates(start, end, step):
         for j in range(len(l)):
             for k in range(len(l)):
                 if (l[i] + l[j] + l[k] == 1):
-                    result.append(tuple((l[i], l[j], l[k])))
+                    result.append([l[i], l[j], l[k]])
 
     return result
 
@@ -110,8 +110,11 @@ if __name__ == '__main__':
     pos_set = pickle.load(open(output_path + "pos_set.pickle", "rb" ))
 
     # candidate_values = lambda_candidates(0.001, 1, 0.001)
+    #
     # candidate_values = pickle.dump(candidate_values, open(output_path + "candidate_values.pickle", "wb"))
     candidate_values = pickle.load(open(output_path + "candidate_values.pickle", "rb"))
+
+    print(len(candidate_values))
 
     # lambda_values, q_values = find_lambdas(candidate_values, taglists, unigrams, bigrams, trigrams, e_values)
     # print(q_probs)
