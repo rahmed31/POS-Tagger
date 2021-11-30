@@ -15,7 +15,7 @@ The hidden Markov model, or HMM for short, is a probabilistic sequence model tha
 
 The task of decoding is ultimately defined as Eq. 1:
 
-![equation](https://latex.codecogs.com/gif.latex?q_%7B1%7D%5E%7Bn%7D%3Dargmax_%7Bq_%7B1%7D%5E%7Bn%7D%7DP%28q_%7B1%7D%5E%7Bn%7D%7Co_%7B1%7D%5E%7Bn%7D%29%3Dargmax_%7Bq_%7B1%7D%5E%7Bn%7D%7D%5Cfrac%7BP%28o_%7B1%7D%5E%7Bn%7D%7Cq_%7B1%7D%5E%7Bn%7D%29P%28q_%7B1%7D%5E%7Bn%7D%29%7D%7BP%28o_%7B1%7D%5E%7Bn%7D%29%7D)
+![equation](https://latex.codecogs.com/gif.latex?q_%7B1%7D%5E%7B%5Cnot%7Bn%7D%7D%3Dargmax_%7Bq_%7B1%7D%5E%7Bn%7D%7DP%28q_%7B1%7D%5E%7Bn%7D%7Co_%7B1%7D%5E%7Bn%7D%29%3Dargmax_%7Bq_%7B1%7D%5E%7Bn%7D%7D%5Cfrac%7BP%28o_%7B1%7D%5E%7Bn%7D%7Cq_%7B1%7D%5E%7Bn%7D%29P%28q_%7B1%7D%5E%7Bn%7D%29%7D%7BP%28o_%7B1%7D%5E%7Bn%7D%29%7D)
 
 where the second equality is computed using Bayes' rule. Moreover, the denominator of the second equality in Eq. 1 can be dropped since it does not depend on *q*. This gives us Eq. 2:
 
