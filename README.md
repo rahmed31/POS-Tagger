@@ -38,4 +38,6 @@ In many cases, we have a labeled corpus of sentences paired with the correct POS
 Likewise, we compute an emission probability *P*(*o<sub>i</sub>* | *q<sub>i</sub>*) as follows:
 
 ![equation](https://latex.codecogs.com/gif.latex?P%28o_%7Bi%7D%7Cq_%7Bi%7D%29%20%3D%20%5Cfrac%7BC%28q_%7Bi%7D%2Co_%7Bi%7D%29%7D%7BC%28q_%7Bi%7D%29%7D)
+
+# The Viterbi Algorithm
  
