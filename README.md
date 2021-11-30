@@ -11,7 +11,13 @@ The hidden Markov model, or HMM for short, is a probabilistic sequence model tha
 
 # Approximating POS tags using Trigram HMMs:
 
-**Decoding** is the task of determining which sequence of variables is the underlying source of some sequence of observations.
+**Decoding** is the task of determining which sequence of variables is the underlying source of some sequence of observations. Mathematically, we want to find the most probable sequence of hidden states *`Q = q_1,q_2,q_3,...,q_N`* given as input to `HMM λ = (A,B)` and a sequence of observations *`O = o_1,o_2,o_3,...,o_N`* where: *`A`* is a transition probability matrix with each element *`a_ij`* representing the probability of moving from a hidden state *`q_i`* to another state *`q_j`* such that the *`summation from j=1 to n of a_ij equals 1`* for *`∀i`*, and *`B`* is a matrix of emission probabilities with each element representing the probability of an observation state *`o_i`* being generated from a hidden state *`q_i`*. In POS tagging, each hidden state corresponds to a single tag, and each observation state corresponds to a word in a given sentence. For example, the task of the decoder may be to find the best hidden tag sequence `DT NNS VB` that maximizes the probability of the observed sequence of words `The dogs run`.
 
+The task of decoding is given as:
 
+![equation](https://latex.codecogs.com/gif.latex?q_%7B1%7D%5E%7Bn%7D%3Dargmax_%7Bq_%7B1%7D%5E%7Bn%7D%7DP%28q_%7B1%7D%5E%7Bn%7D%7Co_%7B1%7D%5E%7Bn%7D%29%3Dargmax_%7Bq_%7B1%7D%5E%7Bn%7D%7D%5Cfrac%7BP%28o_%7B1%7D%5E%7Bn%7D%7Cq_%7B1%7D%5E%7Bn%7D%29P%28q_%7B1%7D%5E%7Bn%7D%29%7D%7BP%28o_%7B1%7D%5E%7Bn%7D%29%7D)
+
+where the second equality is computed using Bayes' rule. Moreover, the denominator of the second equality in the equation above can be dropped since it does not depend on *q*. This gives us:
+
+![equation](https://latex.codecogs.com/gif.latex?q_%7B1%7D%5E%7Bn%7D%3Dargmax_%7Bq_%7B1%7D%5E%7Bn%7D%7DP%28o_%7B1%7D%5E%7Bn%7D%7Cq_%7B1%7D%5E%7Bn%7D%29P%28q_%7B1%7D%5E%7Bn%7D%29%3Dargmax_%7Bq_%7B1%7D%5E%7Bn%7D%7DP%28o_%7B1%7D%5E%7Bn%7D%2Cq_%7B1%7D%5E%7Bn%7D%29)
 
