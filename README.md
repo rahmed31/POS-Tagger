@@ -19,7 +19,7 @@ The task of decoding is ultimately defined as Eq. 1:
 
 where the second equality is computed using Bayes' rule. Moreover, the denominator of the second equality in Eq. 1 can be dropped since it does not depend on *q*. This gives us Eq. 2:
 
-![equation](https://latex.codecogs.com/gif.latex?q_%7B1%7D%5E%7Bn%7D%3Dargmax_%7Bq_%7B1%7D%5E%7Bn%7D%7DP%28o_%7B1%7D%5E%7Bn%7D%7Cq_%7B1%7D%5E%7Bn%7D%29P%28q_%7B1%7D%5E%7Bn%7D%29%3Dargmax_%7Bq_%7B1%7D%5E%7Bn%7D%7DP%28o_%7B1%7D%5E%7Bn%7D%2Cq_%7B1%7D%5E%7Bn%7D%29)
+![equation](https://latex.codecogs.com/gif.latex?q_%7B1%7D%5E%7B%5Cnot%7Bn%7D%7D%3Dargmax_%7Bq_%7B1%7D%5E%7Bn%7D%7DP%28o_%7B1%7D%5E%7Bn%7D%7Cq_%7B1%7D%5E%7Bn%7D%29P%28q_%7B1%7D%5E%7Bn%7D%29%3Dargmax_%7Bq_%7B1%7D%5E%7Bn%7D%7DP%28o_%7B1%7D%5E%7Bn%7D%2Cq_%7B1%7D%5E%7Bn%7D%29)
 
 The trigram HMM tagger makes two assumptions to simplify the computation of the first equality in Eq. 2. The first is that the **emission** probability of a word appearing depends only on its own tag and is independent of neighboring words and tags:
 
