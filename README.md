@@ -60,7 +60,35 @@ Likewise, we compute an emission probability *P*(*o<sub>i</sub>* | *q<sub>i</sub
 # The Viterbi Algorithm
 
 
+<p align="center">
+<img width="210" height="30" src=https://latex.codecogs.com/gif.latex?q_%7B1%7D%5E%7B%5Cnot%7Bn&plus;1%7D%7D%3Dargmax_%7Bq_%7B1%7D%5E%7Bn&plus;1%7D%7DP%28o_%7B1%7D%5E%7Bn%7D%2Cq_%7B1%7D%5E%7Bn&plus;1%7D%29>
+</p>
 
+<p align="center">
+<img width="210" height="40" src=https://latex.codecogs.com/gif.latex?P%28o_%7B1%7D%5E%7Bn%7D%2Cq_%7B1%7D%5E%7Bn&plus;1%7D%29%20%3D%20%5Cprod_%7Bi%3D1%7D%5E%7Bn&plus;1%7DP%28q_%7Bi%7D%20%7C%20q_%7Bt-1%7D%2C%20q_%7Bt-2%7D%29%5Cprod_%7Bi%3D1%7D%5E%7Bn%7DP%28o_%7Bi%7D%7C%20q_%7Bi%7D%29>
+</p>
+
+<p align="center">
+<img width="210" height="40" src=https://latex.codecogs.com/gif.latex?r%28q_%7B-1%7D%5E%7Bk%7D%29%20%3D%20%5Cprod_%7Bi%3D1%7D%5E%7Bn&plus;1%7DP%28q_%7Bi%7D%20%7C%20q_%7Bt-1%7D%2C%20q_%7Bt-2%7D%29%5Cprod_%7Bi%3D1%7D%5E%7Bn%7DP%28o_%7Bi%7D%7C%20q_%7Bi%7D%29>
+</p>
+
+<p align="center">
+<img width="210" height="30" src=https://latex.codecogs.com/gif.latex?%5Cpi%28k%2C%20u%2C%20v%29%20%3D%20max_%7Bq_%7B-1%7D%5E%7Bk%7D%3Aq_%7Bk-1%7D%20%3Du%2Cq_%7Bk%7D%20%3Dv%7Dr%28q_%7B-1%7D%5E%7Bk%7D%29>
+</p>
+
+
+<p align="center">
+<img width="210" height="30" src=https://latex.codecogs.com/gif.latex?%5Cpi%280%2C*%2C*%29%3D%201>
+</p>
+
+
+<p align="center">
+<img width="320" height="25" src=https://latex.codecogs.com/gif.latex?%5Cpi%28k%2C%20u%2C%20v%29%20%3D%20max_%7Bw%5Cin%7BS_%7Bk-2%7D%7D%7D%28%5Cpi%28k-1%2Cw%2Cu%29%5Ccdot%20q%28v%7C%20w%2Cu%29%5Ccdot%20P%28o_%7Bk%7D%7C%20v%29%29>
+</p>
+
+<p align="center">
+<img width="320" height="25" src=https://latex.codecogs.com/gif.latex?max_%7Bw%5Cin%7BS_%7Bn-1%7D%7D%2Cv%5Cin%7BS_%7Bn%7D%7D%7D%28%5Cpi%28n%2Cu%2Cv%29%5Ccdot%20q%28STOP%7C%20u%2Cv%29%29>
+</p>
 
 
 # Enhancing the POS Tagger
