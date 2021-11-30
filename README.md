@@ -11,18 +11,24 @@ The hidden Markov model, or HMM for short, is a probabilistic sequence model tha
 
 # Approximating POS tags using Trigram HMMs:
 
-**Decoding** is the task of determining which sequence of variables is the underlying source of some sequence of observations. Mathematically, we want to find the most probable sequence of hidden states <code>*Q = q<sub>1</sub>,q<sub>2</sub>,q<sub>3</sub>,...,q<sub>N</sub>*</code> given as input to `HMM λ = (A,B)` and a sequence of observations <code>*O = o<sub>1</sub>,o<sub>2</sub>,o<sub>3</sub>,...,o<sub>N</sub>*</code> where: *`A`* is a transition probability matrix with each element *a<sub>ij</sub>* representing the probability of moving from a hidden state *q<sub>i</sub>* to another state *q<sub>j</sub>* such that the summation from j=1 to n of *a<sub>ij</sub>* equals 1 for ∀<sub>i</sub>, and *`B`* is a matrix of emission probabilities with each element representing the probability of an observation state *o<sub>i</sub>* being generated from a hidden state *q<sub>i</sub>*. In POS tagging, each hidden state corresponds to a single tag, and each observation state corresponds to a word in a given sentence. For example, the task of the decoder may be to find the best hidden tag sequence `DT NNS VB` that maximizes the probability of the observed sequence of words `The dogs run`.
+**Decoding** is the task of determining which sequence of variables is the underlying source of some sequence of observations. Mathematically, we want to find the most probable sequence of hidden states <code>*Q = q<sub>1</sub>,q<sub>2</sub>,q<sub>3</sub>,...,q<sub>N</sub>*</code> given as input to `HMM λ = (A,B)` and a sequence of observations <code>*O = o<sub>1</sub>,o<sub>2</sub>,o<sub>3</sub>,...,o<sub>N</sub>*</code> where: *`A`* is a transition probability matrix with each element *a<sub>ij</sub>* representing the probability of moving from a hidden state *q<sub>i</sub>* to another state *q<sub>j</sub>* such that:  
+
+<p align="center">
+<img width="70" height="50" src=https://latex.codecogs.com/gif.latex?%5Csum_%7Bj%3D1%7D%5E%7Bn%7Da%7B_%7Bij%7D%7D%20%3D%201>
+</p>
+
+for ∀<sub>i</sub>, and *`B`* is a matrix of emission probabilities with each element representing the probability of an observation state *o<sub>i</sub>* being generated from a hidden state *q<sub>i</sub>*. In POS tagging, each hidden state corresponds to a single tag, and each observation state corresponds to a word in a given sentence. For example, the task of the decoder may be to find the best hidden tag sequence `DT NNS VB` that maximizes the probability of the observed sequence of words `The dogs run`.
 
 The task of decoding is ultimately defined as Eq. 1:
 
 <p align="center">
-<img width="380" height="50" src=https://latex.codecogs.com/gif.latex?q_%7B1%7D%5E%7B%5Cnot%7Bn%7D%7D%3Dargmax_%7Bq_%7B1%7D%5E%7Bn%7D%7DP%28q_%7B1%7D%5E%7Bn%7D%7Co_%7B1%7D%5E%7Bn%7D%29%3Dargmax_%7Bq_%7B1%7D%5E%7Bn%7D%7D%5Cfrac%7BP%28o_%7B1%7D%5E%7Bn%7D%7Cq_%7B1%7D%5E%7Bn%7D%29P%28q_%7B1%7D%5E%7Bn%7D%29%7D%7BP%28o_%7B1%7D%5E%7Bn%7D%29%7D>
+<img width="385" height="45" src=https://latex.codecogs.com/gif.latex?q_%7B1%7D%5E%7B%5Cnot%7Bn%7D%7D%3Dargmax_%7Bq_%7B1%7D%5E%7Bn%7D%7DP%28q_%7B1%7D%5E%7Bn%7D%7Co_%7B1%7D%5E%7Bn%7D%29%3Dargmax_%7Bq_%7B1%7D%5E%7Bn%7D%7D%5Cfrac%7BP%28o_%7B1%7D%5E%7Bn%7D%7Cq_%7B1%7D%5E%7Bn%7D%29P%28q_%7B1%7D%5E%7Bn%7D%29%7D%7BP%28o_%7B1%7D%5E%7Bn%7D%29%7D>
 </p>
 
 where the second equality is computed using Bayes' rule. Moreover, the denominator of the second equality in Eq. 1 can be dropped since it does not depend on *q*. This gives us Eq. 2:
 
 <p align="center">
-<img width="370" height="26" src=https://latex.codecogs.com/gif.latex?q_%7B1%7D%5E%7B%5Cnot%7Bn%7D%7D%3Dargmax_%7Bq_%7B1%7D%5E%7Bn%7D%7DP%28o_%7B1%7D%5E%7Bn%7D%7Cq_%7B1%7D%5E%7Bn%7D%29P%28q_%7B1%7D%5E%7Bn%7D%29%3Dargmax_%7Bq_%7B1%7D%5E%7Bn%7D%7DP%28o_%7B1%7D%5E%7Bn%7D%2Cq_%7B1%7D%5E%7Bn%7D%29>
+<img width="370" height="23" src=https://latex.codecogs.com/gif.latex?q_%7B1%7D%5E%7B%5Cnot%7Bn%7D%7D%3Dargmax_%7Bq_%7B1%7D%5E%7Bn%7D%7DP%28o_%7B1%7D%5E%7Bn%7D%7Cq_%7B1%7D%5E%7Bn%7D%29P%28q_%7B1%7D%5E%7Bn%7D%29%3Dargmax_%7Bq_%7B1%7D%5E%7Bn%7D%7DP%28o_%7B1%7D%5E%7Bn%7D%2Cq_%7B1%7D%5E%7Bn%7D%29>
 </p>
 
 The trigram HMM tagger makes two assumptions to simplify the computation of the first equality in Eq. 2. The first is that the **emission** probability of a word appearing depends only on its own tag and is independent of neighboring words and tags:
@@ -52,4 +58,15 @@ Likewise, we compute an emission probability *P*(*o<sub>i</sub>* | *q<sub>i</sub
 </p>
 
 # The Viterbi Algorithm
- 
+
+
+
+
+
+# Enhancing the POS Tagger
+Though utilizing a hidden Markov model in conjunction with the Viterbi algorithm can produce tagging results with approximately 50-70% accuracy on a test corpus, this is still well below the human agreement upper bound of 97% for POS tagging. To be able to approach a higher accuracy rate for POS tagging, two additional features are utitlized to enhance my POS tagging model. These features are detailed below: 
+
+## Deleted Interpolation
+
+
+## Morphosyntactic Subcategorization
