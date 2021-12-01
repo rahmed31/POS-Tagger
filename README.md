@@ -31,13 +31,13 @@ where the second equality is computed using Bayes' rule. Moreover, the denominat
 <img width="370" height="23" src=https://latex.codecogs.com/gif.latex?q_%7B1%7D%5E%7B%5Cnot%7Bn%7D%7D%3Dargmax_%7Bq_%7B1%7D%5E%7Bn%7D%7DP%28o_%7B1%7D%5E%7Bn%7D%7Cq_%7B1%7D%5E%7Bn%7D%29P%28q_%7B1%7D%5E%7Bn%7D%29%3Dargmax_%7Bq_%7B1%7D%5E%7Bn%7D%7DP%28o_%7B1%7D%5E%7Bn%7D%2Cq_%7B1%7D%5E%7Bn%7D%29>
 </p>
 
-The trigram HMM tagger makes two assumptions to simplify the computation of the first equality in Eq. 2. The first is that the **emission** probability of a word appearing depends only on its own tag and is independent of neighboring words and tags:
+The trigram HMM tagger makes two assumptions to simplify the computation of the first equality in Eq. 2. The first is that the **emission** probability of a word appearing depends only on its own tag and is independent of neighboring words and tags (Eq. 3):
 
 <p align="center">
 <img width="190" height="50" src=https://latex.codecogs.com/gif.latex?P%28o_%7B1%7D%5E%7Bn%7D%7Cq_%7B1%7D%5E%7Bn%7D%29%3D%5Cprod_%7Bi%3D1%7D%5E%7Bn%7DP%28o_%7Bi%7D%7Cq_%7Bi%7D%29>
 </p>
  
-The second is a Markov assumption that the **transition** probability of a tag is dependent only on the previous two tags rather than the entire tag sequence:
+The second is a Markov assumption that the **transition** probability of a tag is dependent only on the previous two tags rather than the entire tag sequence (Eq. 4):
 
 <p align="center">
 <img width="205" height="55" src=https://latex.codecogs.com/gif.latex?P%28q_%7B1%7D%5E%7Bn%7D%29%5Capprox%20%5Cprod_%7Bi%3D1%7D%5E%7Bn&plus;1%7DP%28q_%7Bi%7D%7Cq_%7Bi-1%7D%2Cq_%7Bi-2%7D%29>
@@ -45,13 +45,13 @@ The second is a Markov assumption that the **transition** probability of a tag i
 
 where *q<sub>-1</sub> = q<sub>-2</sub>* = * is the special start symbol appended to the beginning of every tag sequence and *q<sub>n+1</sub>* = *STOP* is the unique stop symbol marked at the end of every tag sequence.
 
-In many cases, we have a labeled corpus of sentences paired with the correct POS tag sequences `The/DT boys/NNS eat/VB` such as in the Brown corpus, so the problem of POS tagging is that of the supervised learning where we easily calculate the maximum likelihood estimate of a transition probability *P*(*q<sub>i</sub>* | *q<sub>i-1</sub>, q<sub>i-2</sub>*) by counting how often we see the third tag *q<sub>i</sub>* followed by its previous two tags *q<sub>i-1</sub>* and *q<sub>i-2</sub>* divided by the number of occurrences of the two tags *q<sub>i-1</sub>* and *q<sub>i-2</sub>*:
+In many cases, we have a labeled corpus of sentences paired with the correct POS tag sequences `The/DT boys/NNS eat/VB` such as in the Brown corpus, so the problem of POS tagging is that of the supervised learning where we easily calculate the maximum likelihood estimate of a transition probability *P*(*q<sub>i</sub>* | *q<sub>i-1</sub>, q<sub>i-2</sub>*) by counting how often we see the third tag *q<sub>i</sub>* followed by its previous two tags *q<sub>i-1</sub>* and *q<sub>i-2</sub>* divided by the number of occurrences of the two tags *q<sub>i-1</sub>* and *q<sub>i-2</sub>* (Eq. 5):
 
 <p align="center">
 <img width="250" height="47" src=https://latex.codecogs.com/gif.latex?P%28q_%7Bi%7D%7Cq_%7Bi-1%7D%2Cq_%7Bi-2%7D%29%20%3D%20%5Cfrac%7BC%28q_%7Bi-2%7D%2Cq_%7Bi-1%7D%2Cq_%7Bi%7D%29%7D%7BC%28q_%7Bi-2%7D%2Cq_%7Bi-1%7D%29%7D>
 </p>
 
-Likewise, we compute an emission probability *P*(*o<sub>i</sub>* | *q<sub>i</sub>*) as follows:
+Likewise, we compute an emission probability *P*(*o<sub>i</sub>* | *q<sub>i</sub>*) as follows (Eq. 6):
 
 <p align="center">
 <img width="145" height="47" src=https://latex.codecogs.com/gif.latex?P%28o_%7Bi%7D%7Cq_%7Bi%7D%29%20%3D%20%5Cfrac%7BC%28q_%7Bi%7D%2Co_%7Bi%7D%29%7D%7BC%28q_%7Bi%7D%29%7D>
@@ -110,6 +110,29 @@ Though utilizing a hidden Markov model in conjunction with the Viterbi algorithm
 
 ## Deleted Interpolation
 
+Previously, a transition probability is calculated with Eq. 5. However, many times these counts will return a zero in a training corpus which erroneously predicts that a given tag sequence will never occur at all. A common, effective remedy to this zero division error is to estimate a trigram transition probability by aggregating weaker, yet more robust estimators such as a bigram and a unigram probability. For instance, assume we have never seen the tag sequence `DT NNS VB` in a training corpus, so the trigram transition probability *P*(*VB*∣*DT*,*NNS*) = 0 but it may still be possible to compute the bigram transition probability *P*(*VB*|*NNS*) as well as the unigram probability *P*(*VB*).
+
+More generally, the maximum likelihood estimates of the following transition probabilities can be computed using counts from a training corpus and subsequenty setting them to zero if the denominator happens to be zero:
+
+<p align="center">
+<img width="245" height="45" src=https://latex.codecogs.com/gif.latex?P%5Chat%28q_%7Bi%7D%20%7C%20q_%7Bi-1%7D%2C%20q_%7Bi-2%7D%29%20%3D%20%5Cfrac%7BC%28q_%7Bi-2%7D%2C%20q_%7Bi-1%7D%2C%20q_%7Bi%7D%29%7D%7BC%28q_%7Bi-2%7D%2C%20q_%7Bi-1%7D%29%7D>
+</p>
+
+<p align="center">
+<img width="175" height="40" src=https://latex.codecogs.com/gif.latex?P%5Chat%28q_%7Bi%7D%20%7C%20q_%7Bi-1%7D%29%20%3D%20%5Cfrac%7BC%28q_%7Bi-1%7D%2C%20q_%7Bi%7D%29%7D%7BC%28q_%7Bi-1%7D%29%7D>
+</p>
+
+<p align="center">
+<img width="100" height="40" src=https://latex.codecogs.com/gif.latex?P%5Chat%28q_%7Bi%7D%29%20%3D%20%5Cfrac%7BC%28q_%7Bi%7D%29%7D%7BC%28N%29%7D>
+</p>
+
+where *N* is the total number of tokens, not unique words, in the training corpus. The final trigram probability estimate *P*<sup>~</sup>(*q<sub>i</sub>* | *q<sub>i-1</sub>*, *q<sub>i-2</sub>*) is calculated by a weighted sum of the trigram, bigram, and unigram probability estimates above:
+
+<p align="center">
+<img width="440" height="23" src=https://latex.codecogs.com/gif.latex?P%5Ctilde%28q_%7Bi%7D%20%7C%20q_%7Bi-1%7D%2C%20q_%7Bi-2%7D%29%20%3D%20%5Clambda_%7B3%7D%5Ccdot%20P%5Chat%28q_%7Bi%7D%20%7C%20q_%7Bi-1%7D%2C%20q_%7Bi-2%7D%29%20&plus;%20%5Clambda_%7B2%7D%5Ccdot%20P%5Chat%28q_%7Bi%7D%20%7C%20q_%7Bi-1%7D%29%20&plus;%20%5Clambda_%7B1%7D%5Ccdot%20P%5Chat%28q_%7Bi%7D%29>
+</p>
+
+under the constraint λ<sub>1</sub> + λ<sub>2</sub> + λ<sub>3</sub> = 1. These values of λs are generally set using the algorithm called deleted interpolation which is conceptually similar to leave-one-out cross-validation `LOOCV` in that each trigram is successively deleted from the training corpus and the λs are chosen to maximize the likelihood of the rest of the corpus. The deletion mechanism thereby helps set the λs so as to not overfit the training corpus and aid in generalization. 
 
 ## Morphosyntactic Subcategorization
 
@@ -117,6 +140,6 @@ In linguistics, Hockett's Design Features are a set of features that characteriz
 
 RARE is a simple way to replace every word or token with the special symbol `_RARE_` whose frequency in the training set is less than or equal to 5. Without this process, words like person names and places that do not appear in the training set but are seen in the test set would have their maximum likelihood estimates of P(*q<sub>i</sub>* ∣ *o<sub>i</sub>*) (i.e., the emission probabilities) undefined.
 
-Morphosyntactic subcategorization is a modification of RARE that serves as a better alternative in that every word token whose frequency is less than or equal to 5 in the training set is replaced by further subcategorization based on a set of morphological cues. For example, we know that words with suffixes like `-ion`, `-ment`, `-ence`, or `-ness`, just to name a few, will be a noun, and that adjectives may possess `un-` and `in-` as prefixes or `-ious` and `-ble` as suffixes. 
+Morphosyntactic subcategorization is a modification of RARE that serves as a better alternative in that every word token whose frequency is less than or equal to 5 in the training set is replaced by further subcategorization based on a set of morphological characteristics (i.e., affixation). For example, we know that words with suffixes like `-ion`, `-ment`, `-ence`, or `-ness`, just to name a few, will be a noun, and that adjectives may possess `un-` and `in-` as prefixes or `-ious` and `-ble` as suffixes. 
 
 # Results
