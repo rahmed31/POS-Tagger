@@ -31,13 +31,13 @@ where the second equality is computed using Bayes' rule. Moreover, the denominat
 <img width="370" height="23" src=https://latex.codecogs.com/gif.latex?q_%7B1%7D%5E%7B%5Cnot%7Bn%7D%7D%3Dargmax_%7Bq_%7B1%7D%5E%7Bn%7D%7DP%28o_%7B1%7D%5E%7Bn%7D%7Cq_%7B1%7D%5E%7Bn%7D%29P%28q_%7B1%7D%5E%7Bn%7D%29%3Dargmax_%7Bq_%7B1%7D%5E%7Bn%7D%7DP%28o_%7B1%7D%5E%7Bn%7D%2Cq_%7B1%7D%5E%7Bn%7D%29>
 </p>
 
-The trigram HMM tagger makes two assumptions to simplify the computation of the first equality in Eq. 2. The first is that the **emission** probability of a word appearing depends only on its own tag and is independent of neighboring words and tags (Eq. 3):
+The trigram HMM tagger makes two assumptions to simplify the computation of the first equality in Eq. 2. The first is that the **emission** probability of a word appearing depends only on its own tag and is independent of neighboring words and tags, which gives us Eq. 3:
 
 <p align="center">
 <img width="190" height="50" src=https://latex.codecogs.com/gif.latex?P%28o_%7B1%7D%5E%7Bn%7D%7Cq_%7B1%7D%5E%7Bn%7D%29%3D%5Cprod_%7Bi%3D1%7D%5E%7Bn%7DP%28o_%7Bi%7D%7Cq_%7Bi%7D%29>
 </p>
  
-The second is a Markov assumption that the **transition** probability of a tag is dependent only on the previous two tags rather than the entire tag sequence (Eq. 4):
+The second is a Markov assumption that the **transition** probability of a tag is dependent only on the previous two tags rather than the entire tag sequence, which gives us Eq. 4:
 
 <p align="center">
 <img width="205" height="55" src=https://latex.codecogs.com/gif.latex?P%28q_%7B1%7D%5E%7Bn%7D%29%5Capprox%20%5Cprod_%7Bi%3D1%7D%5E%7Bn&plus;1%7DP%28q_%7Bi%7D%7Cq_%7Bi-1%7D%2Cq_%7Bi-2%7D%29>
@@ -51,7 +51,7 @@ In many cases, we have a labeled corpus of sentences paired with the correct POS
 <img width="250" height="47" src=https://latex.codecogs.com/gif.latex?P%28q_%7Bi%7D%7Cq_%7Bi-1%7D%2Cq_%7Bi-2%7D%29%20%3D%20%5Cfrac%7BC%28q_%7Bi-2%7D%2Cq_%7Bi-1%7D%2Cq_%7Bi%7D%29%7D%7BC%28q_%7Bi-2%7D%2Cq_%7Bi-1%7D%29%7D>
 </p>
 
-Likewise, we compute an emission probability *P*(*o<sub>i</sub>* | *q<sub>i</sub>*) as follows (Eq. 6):
+Likewise, we compute an emission probability *P*(*o<sub>i</sub>* | *q<sub>i</sub>*) using Eq. 6 as follows:
 
 <p align="center">
 <img width="145" height="47" src=https://latex.codecogs.com/gif.latex?P%28o_%7Bi%7D%7Cq_%7Bi%7D%29%20%3D%20%5Cfrac%7BC%28q_%7Bi%7D%2Co_%7Bi%7D%29%7D%7BC%28q_%7Bi%7D%29%7D>
@@ -110,7 +110,7 @@ Though utilizing a hidden Markov model in conjunction with the Viterbi algorithm
 
 ## Deleted Interpolation
 
-Previously, a transition probability is calculated with Eq. 5. However, many times these counts will return a zero in a training corpus which erroneously predicts that a given tag sequence will never occur at all. A common, effective remedy to this zero division error is to estimate a trigram transition probability by aggregating weaker, yet more robust estimators such as a bigram and a unigram probability. For instance, assume we have never seen the tag sequence `DT NNS VB` in a training corpus, so the trigram transition probability *P*(*VB*∣*DT*,*NNS*) = 0 but it may still be possible to compute the bigram transition probability *P*(*VB*|*NNS*) as well as the unigram probability *P*(*VB*).
+Normally, transition probabilities are calculated using Equation 5 above. However, these counts may result in a returned value of zero using a training corpus which erroneously predicts that a given tag sequence will never occur at all. A common, effective remedy to this division by zero error is to estimate a trigram transition probability by aggregating weaker, yet more robust estimators such as bigram and unigram probabilities. For instance, assume we have never seen the tag sequence `DT NNS VB` in a training corpus, so the trigram transition probability *P*(*VB*∣*DT*,*NNS*) = 0 but it may still be possible to compute the bigram transition probability *P*(*VB*|*NNS*) as well as the unigram probability *P*(*VB*).
 
 More generally, the maximum likelihood estimates of the following transition probabilities can be computed using counts from a training corpus and subsequenty setting them to zero if the denominator happens to be zero:
 
