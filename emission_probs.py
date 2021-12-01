@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 # # -*- coding: utf-8 -*-
 #-------------------------------------------------------------------------------------------
-#The purpose of this file is to calculate the probabilities of all unigrams, bigrams, and trigrams
-#that occur in the training corpus, as well as emission probabilities for each word/tag pair. This
-#file also collects the set of all POS tags that are present in the test corpus. These probabilities
-#allow our model to predict the POS tags for the test corpus. To remedy the issue of unseen words
-#that occur in the test corpus, which would normally result in a '0' emission probability, low frequency
-#words in the training corpus (i.e., words that occur 5 times or less) are generalized by mapping them
-#to their determined part of speech using morphosyntactic subcategorization. This allows unseen words
-#in the test corpus to be predicted with a non-zero probability since unseen words in the test corpus
+#The purpose of this file is to calculate the emission probabilities for each word/tag pair that
+#appear in the training corpus. This file also collects the set of all POS tags that are present
+#in the training corpus and a list of "known words" (i.e., words that occur more than 5 times in the training corpus).
+#The emission probabilities allow the model to predict the POS tags for the test corpus. To remedy the issue of
+#unseen words that occur in the test corpus, which would normally result in a '0' emission probability, low frequency
+#words in the training corpus (i.e., words that occur 5 times or less) are generalized by mapping them to their determined
+#part of speech using morphosyntactic subcategorization. This allows unseen words in the test corpus to ultimately be
+#predicted with a non-zero probability since unseen words in the test corpus (i.e., words not in the "known words" list)
 #will also be mapped to their morphosyntactic subcategory.
 #
 #
@@ -25,7 +25,6 @@ from collections import defaultdict
 
 output_path = 'data/model_data/'
 RARE_SYMBOL = '_RARE_'
-START_SYMBOL = '*'
 MAX_FREQ_RARE = 5
 
 #function for retrieving high frequency words from training corpus
@@ -98,10 +97,6 @@ def emission_probs(tokenlists, taglists):
 if __name__ == '__main__':
 
     start = time.perf_counter()
-
-    unigrams = dict(pickle.load(open(output_path + "unigrams.pickle", "rb" )))
-    bigrams = dict(pickle.load(open(output_path + "bigrams.pickle", "rb" )))
-    trigrams = dict(pickle.load(open(output_path + "trigrams.pickle", "rb" )))
 
     tokenlists = pickle.load(open(output_path + "tokenlists.pickle", "rb" ))
     taglists = pickle.load(open(output_path + "taglists.pickle", "rb" ))
