@@ -17,7 +17,7 @@ The hidden Markov model, or HMM for short, is a probabilistic sequence model tha
 <img width="70" height="50" src=https://latex.codecogs.com/gif.latex?%5Csum_%7Bj%3D1%7D%5E%7Bn%7Da%7B_%7Bij%7D%7D%20%3D%201>
 </p>
 
-for ∀<sub>i</sub>, and *`B`* is a matrix of emission probabilities with each element representing the probability of an observation state *o<sub>i</sub>* being generated from a hidden state *q<sub>i</sub>*. In POS tagging, each hidden state corresponds to a single tag, and each observation state corresponds to a word in a given sentence. For example, the task of the decoder may be to find the best hidden tag sequence `DT NNS VB` that maximizes the probability of the observed sequence of words `The dogs run`.
+for ∀<sub>i</sub>, and *`B`* is a matrix of emission probabilities with each element representing the probability of an observation state *o<sub>i</sub>* being generated from a hidden state *q<sub>i</sub>*. In POS tagging, each hidden state corresponds to a single tag, and each observation state corresponds to a word in a given sentence. For example, the task of the decoder may be to find the best hidden tag sequence `DT NNS VB` that maximizes the probability of the observed sequence of words `The boys eat`.
 
 The task of decoding is ultimately defined as Eq. 1:
 
