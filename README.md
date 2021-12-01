@@ -150,18 +150,18 @@ Morphosyntactic subcategorization is a modification of RARE that serves as a bet
 
 The Trigram HMM POS tagger is trained on a subset of the Brown corpus, which contains nearly 27500 tagged sentences in total. The training set contains approximately 80% of the entire corpus, with the remainder 20% being utilized as the test set. The accuracy of the tagger is measured by comparing the predicted tags in the test set with the true tags of the test set already provided in the corpus. Thus, the percentage of tags that the model gets correct is defined as the accuracy. 
 
-Using a combination of deleted interpolation with morphosyntactic subcategorization, my POS tagger achieves an overall accuracy of: **TBD!!!**
+Using a combination of deleted interpolation with morphosyntactic subcategorization, my POS tagger achieves an overall accuracy of: **IN PROGRESS**
 
 # Rundown of Respository 
 
-Each file is briefly explained in the order that they're used: 
+Each file is **briefly** explained in the order that they were created and used: 
 
-1. `train_model.py` is used to create dictionaries of POS unigrams, bigrams, and trigrams, as well as build a sample file of what these dictionaries contain at first glance.
-2. `emission_probs.py` is used to apply morphosyntactic subcategorization to the training corpus to be able to calculate the emission probabilities for each word/POS pair. 
-3. `transmission_probs.py` is used to experimentally calculate the λ values for deleted interpolation, find the interpolated transmission probabilities for each ngram, and ultimtately deduce the overall accuracy of the POS tagger using components retrieved from `train_model.py` and `emission_probs.py`.
+1. `train_model.py` is used to: get two separate lists containing cleaned sentences and POS sequences, respectively, from the training corpus, create dictionaries of POS unigrams, bigrams, and trigrams, and build a sample file of what these dictionaries contain at first glance for the sole purpose of visualization.
+2. `emission_probs.py` is used to apply morphosyntactic subcategorization to the sentences list to be able to calculate the emission probabilities for each word/POS pair as well as get a list of "known words" from the sentences lists. 
+3. `transmission_probs.py` is used to experimentally calculate the λ values for deleted interpolation, find the interpolated transmission probabilities for each ngram, and ultimtately deduce the overall accuracy of the POS tagger using necessary components retrieved from `train_model.py` and `emission_probs.py`.
 4. `viterbi.py` is used to apply the Viterbi algorithm to retrieve the most probabilistic sequence of POS tags for the test set. 
 
-When taking a look at each file, you will notice that they each contain in-depth descriptions of how they work and the purpose of all functions that are within them. 
+When taking a look at each file, you will notice that they each contain an in-depth description of how they work and the purpose of all functions that are within them. You may also notice that all functions have been modularized so that they can be imported and reused in different files if necessary.
 
 # Acknowledgments
 
