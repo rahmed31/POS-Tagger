@@ -1,5 +1,9 @@
 # POS-Tagger
-This repository details the creation of a Part-of-Speech tagger using a trigram hidden Markov model and the Viterbi algorithm to predict word tags in a word sequence.
+This repository details the creation of a Part-of-Speech tagger using a trigram hidden Markov model (HMM) and the Viterbi algorithm to predict word tags in a word sequence. It is trained and evaluated on a real-world text called the Brown corpus, which contains approximately 1 million words from 500 texts across 15 different genres. The Brown corpus was compiled by Henry Kučera and W. Nelson Francis at Brown University in Rhode Island and was published in the United States in 1961. For more information regarding the history of the Brown corpus, [click here](https://en.wikipedia.org/wiki/Brown_Corpus).
+
+To view a subset of the Brown Corpus and how it is annotated, [click here](http://fid.cl/courses/nlp/hw/ca_train.txt).
+
+To view the original manual and tagset used in the Brown Corpus, [click here](http://korpus.uib.no/icame/manuals/BROWN/INDEX.HTM).
 
 # What is Part-of-Speech Tagging?
 
@@ -11,7 +15,7 @@ The hidden Markov model, or HMM for short, is a probabilistic sequence model tha
 
 # Approximating POS tags using Trigram HMMs:
 
-**Decoding** is the task of determining which sequence of variables is the underlying source of some sequence of observations. Mathematically, we want to find the most probable sequence of hidden states <code>*Q = q<sub>1</sub>,q<sub>2</sub>,q<sub>3</sub>,...,q<sub>N</sub>*</code> given as input to `HMM λ = (A,B)` and a sequence of observations <code>*O = o<sub>1</sub>,o<sub>2</sub>,o<sub>3</sub>,...,o<sub>N</sub>*</code> where: *`A`* is a transition probability matrix with each element *a<sub>ij</sub>* representing the probability of moving from a hidden state *q<sub>i</sub>* to another state *q<sub>j</sub>* such that:  
+**Decoding** is the task of determining which sequence of variables is the underlying source of some sequence of observations. Mathematically, we would like to find the most probable sequence of hidden states <code>*Q = q<sub>1</sub>,q<sub>2</sub>,q<sub>3</sub>,...,q<sub>N</sub>*</code> given as input to `HMM λ = (A,B)` and a sequence of observations <code>*O = o<sub>1</sub>,o<sub>2</sub>,o<sub>3</sub>,...,o<sub>N</sub>*</code> where: *`A`* is a transition probability matrix with each element *a<sub>ij</sub>* representing the probability of moving from a hidden state *q<sub>i</sub>* to another state *q<sub>j</sub>* such that:  
 
 <p align="center">
 <img width="70" height="50" src=https://latex.codecogs.com/gif.latex?%5Csum_%7Bj%3D1%7D%5E%7Bn%7Da%7B_%7Bij%7D%7D%20%3D%201>
@@ -132,14 +136,22 @@ where *N* is the total number of tokens, not unique words, in the training corpu
 <img width="440" height="23" src=https://latex.codecogs.com/gif.latex?P%5Ctilde%28q_%7Bi%7D%20%7C%20q_%7Bi-1%7D%2C%20q_%7Bi-2%7D%29%20%3D%20%5Clambda_%7B3%7D%5Ccdot%20P%5Chat%28q_%7Bi%7D%20%7C%20q_%7Bi-1%7D%2C%20q_%7Bi-2%7D%29%20&plus;%20%5Clambda_%7B2%7D%5Ccdot%20P%5Chat%28q_%7Bi%7D%20%7C%20q_%7Bi-1%7D%29%20&plus;%20%5Clambda_%7B1%7D%5Ccdot%20P%5Chat%28q_%7Bi%7D%29>
 </p>
 
-under the constraint λ<sub>1</sub> + λ<sub>2</sub> + λ<sub>3</sub> = 1. These values of λs are generally set using the algorithm called deleted interpolation which is conceptually similar to leave-one-out cross-validation `LOOCV` in that each trigram is successively deleted from the training corpus and the λs are chosen to maximize the likelihood of the rest of the corpus. The deletion mechanism thereby helps set the λs so as to not overfit the training corpus and aid in generalization. 
+under the constraint λ<sub>1</sub> + λ<sub>2</sub> + λ<sub>3</sub> = 1. These values of λs are generally set using the algorithm called deleted interpolation which is conceptually similar to leave-one-out cross-validation `LOOCV` in that each trigram is successively deleted from the training corpus and the λs are chosen to maximize the likelihood of the rest of the corpus. The deletion mechanism thereby helps set the λs so as to not overfit the training corpus and aid in generalization. The λ values are experimentally determined in my repository.
 
 ## Morphosyntactic Subcategorization
 
-In linguistics, Hockett's Design Features are a set of features that characterize human language and set it apart from animal communication. Of these features, one of the most important is "productivity," which refers to the idea that language-users can produce and understand an unlimited amount of novel utterances. Also related to productivity is the concept of grammatical patterning, which facilitates the use and comprehension of language. Language is not stagnant, but is constantly changing. Thus, in all languages, new words and jargons are constantly being coined and added to a dictionary. Updating a dictionary of vocabularies is, however, too cumbersome and takes an unreasonable amount of effort. Thus, it is important to have a good model for dealing with unknown words found in a test corpus to achieve a high accuracy with a trigram HMM POS tagger.
+In linguistics, Hockett's Design Features are a set of features that characterize human language and set it apart from animal communication. Of these features, one of the most important is "productivity," which refers to the idea that language-users can produce and understand an unlimited amount of novel utterances. Also related to productivity is the concept of grammatical patterning, which facilitates the use and comprehension of language. Language is not stagnant, but is constantly changing. Thus, in all languages, new words and phrases are constantly being coined and added to a dictionary. Updating a dictionary of vocabularies is, however, too cumbersome and takes an unreasonable amount of effort. Thus, it is important to have a good model for dealing with unknown words found in a test corpus to achieve a high accuracy with a trigram HMM POS tagger.
 
 Utilizing RARE is a simple way to replace every word or token with the special symbol `_RARE_` whose frequency in the training set is less than or equal to 5. Without this process, words like person names and places that do not appear in the training set but are seen in the test set would have their maximum likelihood estimates of P(*q<sub>i</sub>* ∣ *o<sub>i</sub>*) (i.e., the emission probabilities) undefined.
 
 Morphosyntactic subcategorization is a modification of RARE that serves as a better alternative in that every word token whose frequency is less than or equal to 5 in the training set is replaced by further subcategorization based on a set of morphological characteristics (i.e., affixation). For example, we know that words with suffixes like `-ion`, `-ment`, `-ence`, or `-ness`, just to name a few, will be a noun, and that adjectives may possess `un-` and `in-` as prefixes or `-ious` and `-ble` as suffixes. 
 
 # Results
+
+The Trigram HMM POS tagger is trained on a subset of the Brown corpus, which contains nearly 27500 tagged sentences in total. The training set contains approximately 80% of the entire corpus, with the remainder 20% being utilized as the test set. The accuracy of the tagger is measured by comparing the predicted tags in the test set with the true tags of the test set already provided in the corpus. Thus, the percentage of tags that the model gets correct is defined as the accuracy. 
+
+Using a combination of deleted interpolation with morphosyntactic subcategorization, my POS tagger achieves an overall accuracy of: **TBD**
+
+# Acknowledgments
+
+I would like to thank data scientist Seong Hyun Hwang for providing well-documented and organized material regarding the mathematics and logic behind part-of-speech tagging using trigram hidden Markov models. 
