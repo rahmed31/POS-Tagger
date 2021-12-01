@@ -112,9 +112,9 @@ The last component of the Viterbi algorithm is **backpointers**. The goal of the
 # Enhancing the POS Tagger
 Though utilizing a hidden Markov model in conjunction with the Viterbi algorithm can produce tagging results with approximately 50-70% accuracy on a test corpus, this is still well below the human agreement upper bound of 97% for POS tagging. To be able to approach a higher accuracy rate for POS tagging, two additional features are utitlized to enhance my POS tagging model. These features are detailed below: 
 
-## Deleted Interpolation
+### Deleted Interpolation
 
-Normally, transition probabilities are calculated using Equation 5 above. However, these counts may result in a returned value of zero using a training corpus which erroneously predicts that a given tag sequence will never occur at all. A common, effective remedy to this division by zero error is to estimate a trigram transition probability by aggregating weaker, yet more robust estimators such as bigram and unigram probabilities. For instance, assume we have never seen the tag sequence `DT NNS VB` in a training corpus, so the trigram transition probability *P*(*VB* ∣ *DT*,*NNS*) = 0 but it may still be possible to compute the bigram transition probability *P*(*VB* | *NNS*) as well as the unigram probability *P*(*VB*).
+Normally, transition probabilities are calculated using Equation 5 above. However, these counts may result in a returned value of zero using a training corpus which erroneously predicts that a given tag sequence will never occur at all. A common, effective solution to this division by zero error is to estimate a trigram transition probability by aggregating weaker, yet more robust estimators such as bigram and unigram probabilities. For instance, assume we have never seen the tag sequence `DT NNS VB` in a training corpus, so the trigram transition probability *P*(*VB* ∣ *DT*,*NNS*) = 0 but it may still be possible to compute the bigram transition probability *P*(*VB* | *NNS*) as well as the unigram probability *P*(*VB*).
 
 More generally, the maximum likelihood estimates of the following transition probabilities can be computed using counts from a training corpus and subsequenty setting them to zero if the denominator happens to be zero:
 
@@ -138,7 +138,7 @@ where *N* is the total number of tokens, not unique words, in the training corpu
 
 under the constraint λ<sub>1</sub> + λ<sub>2</sub> + λ<sub>3</sub> = 1. These values of λs are generally set using the algorithm called deleted interpolation which is conceptually similar to leave-one-out cross-validation `LOOCV` in that each trigram is successively deleted from the training corpus and the λs are chosen to maximize the likelihood of the rest of the corpus. The deletion mechanism thereby helps set the λs so as to not overfit the training corpus and aid in generalization. The λ values are experimentally determined in my repository.
 
-## Morphosyntactic Subcategorization
+### Morphosyntactic Subcategorization
 
 In linguistics, Hockett's Design Features are a set of features that characterize human language and set it apart from animal communication. Of these features, one of the most important is "productivity," which refers to the idea that language-users can produce and understand an unlimited amount of novel utterances. Also related to productivity is the concept of grammatical patterning, which facilitates the use and comprehension of language. Language is not stagnant, but is constantly changing. Thus, in all languages, new words and phrases are constantly being coined and added to a dictionary. Updating a dictionary of vocabularies is, however, too cumbersome and takes an unreasonable amount of effort. Thus, it is important to have a good model for dealing with unknown words found in a test corpus to achieve a high accuracy with a trigram HMM POS tagger.
 
@@ -151,6 +151,10 @@ Morphosyntactic subcategorization is a modification of RARE that serves as a bet
 The Trigram HMM POS tagger is trained on a subset of the Brown corpus, which contains nearly 27500 tagged sentences in total. The training set contains approximately 80% of the entire corpus, with the remainder 20% being utilized as the test set. The accuracy of the tagger is measured by comparing the predicted tags in the test set with the true tags of the test set already provided in the corpus. Thus, the percentage of tags that the model gets correct is defined as the accuracy. 
 
 Using a combination of deleted interpolation with morphosyntactic subcategorization, my POS tagger achieves an overall accuracy of: **TBD!!!**
+
+# Using the Repository
+
+
 
 # Acknowledgments
 
