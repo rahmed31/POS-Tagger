@@ -152,9 +152,16 @@ The Trigram HMM POS tagger is trained on a subset of the Brown corpus, which con
 
 Using a combination of deleted interpolation with morphosyntactic subcategorization, my POS tagger achieves an overall accuracy of: **TBD!!!**
 
-# Using the Repository
+# Rundown of Respository 
 
+Each file is briefly explained in the order that they're used: 
 
+1. `train_model.py` is used to create dictionaries of POS unigrams, bigrams, and trigrams, as well as build a sample file of what these dictionaries contain at first glance.
+2. `emission_probs.py` is used to apply morphosyntactic subcategorization to the training corpus to be able to calculate the emission probabilities for each word/POS pair. 
+3. `transmission_probs.py` is used to experimentally calculate the λ values for deleted interpolation, find the interpolated transmission probabilities for each ngram, and ultimtately deduce the overall accuracy of the POS tagger using components retrieved from `train_model.py` and `emission_probs.py`.
+4. `viterbi.py` is used to apply the Viterbi algorithm to retrieve the most probabilistic sequence of POS tags for the test set. 
+
+When taking a look at each file, you will notice that they each contain in-depth descriptions of how they work and the purpose of all functions that are within them. 
 
 # Acknowledgments
 
