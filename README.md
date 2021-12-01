@@ -107,7 +107,7 @@ and ultimately return:
 <img width="340" height="22" src=https://latex.codecogs.com/gif.latex?max_%7Bw%5Cin%7BS_%7Bn-1%7D%7D%2Cv%5Cin%7BS_%7Bn%7D%7D%7D%28%5Cpi%28n%2Cu%2Cv%29%5Ccdot%20q%28STOP%7C%20u%2Cv%29%29>
 </p>
 
-The last component of the Viterbi algorithm is **backpointers**. The goal of the decoder is to not only produce a probability of the most probable tag sequence but also the resulting tag sequence itself. The best state sequence is computed by keeping track of the path of hidden state that led to each state and backtracing the best path in reverse from the end to the start. A full implementation of the Viterbi algorithm is shown.
+The last component of the Viterbi algorithm is **backpointers**. The goal of the decoder is to not only produce a probability of the most probable tag sequence but also the resulting tag sequence itself. The best state sequence is computed by keeping track of the path of hidden state that led to each state and backtracing the best path in reverse from the end to the start.
 
 # Enhancing the POS Tagger
 Though utilizing a hidden Markov model in conjunction with the Viterbi algorithm can produce tagging results with approximately 50-70% accuracy on a test corpus, this is still well below the human agreement upper bound of 97% for POS tagging. To be able to approach a higher accuracy rate for POS tagging, two additional features are utitlized to enhance my POS tagging model. These features are detailed below: 
@@ -150,7 +150,7 @@ Morphosyntactic subcategorization is a modification of RARE that serves as a bet
 
 The Trigram HMM POS tagger is trained on a subset of the Brown corpus, which contains nearly 27500 tagged sentences in total. The training set contains approximately 80% of the entire corpus, with the remainder 20% being utilized as the test set. The accuracy of the tagger is measured by comparing the predicted tags in the test set with the true tags of the test set already provided in the corpus. Thus, the percentage of tags that the model gets correct is defined as the accuracy. 
 
-Using a combination of deleted interpolation with morphosyntactic subcategorization, my POS tagger achieves an overall accuracy of: **TBD**
+Using a combination of deleted interpolation with morphosyntactic subcategorization, my POS tagger achieves an overall accuracy of: **TBD!!!**
 
 # Acknowledgments
 
