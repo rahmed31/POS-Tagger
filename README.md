@@ -59,37 +59,51 @@ Likewise, we compute an emission probability *P*(*o<sub>i</sub>* | *q<sub>i</sub
 
 # The Viterbi Algorithm
 
+Recall that the decoding task is to find:
 
 <p align="center">
-<img width="210" height="30" src=https://latex.codecogs.com/gif.latex?q_%7B1%7D%5E%7B%5Cnot%7Bn&plus;1%7D%7D%3Dargmax_%7Bq_%7B1%7D%5E%7Bn&plus;1%7D%7DP%28o_%7B1%7D%5E%7Bn%7D%2Cq_%7B1%7D%5E%7Bn&plus;1%7D%29>
+<img width="250" height="30" src=https://latex.codecogs.com/gif.latex?q_%7B1%7D%5E%7B%5Cnot%7Bn&plus;1%7D%7D%3Dargmax_%7Bq_%7B1%7D%5E%7Bn&plus;1%7D%7DP%28o_%7B1%7D%5E%7Bn%7D%2Cq_%7B1%7D%5E%7Bn&plus;1%7D%29>
 </p>
+
+where the argmax is taken over all sequences *q*<sub>1</sub>*<sup>n</sup>* such that *q<sub>i</sub>* ∈ *S* for *i* = 1,...,*n* and *S* is the set of all tags. We further assume that *P*(*o*<sub>1</sub>*<sup>n</sup>*,*q*<sub>1</sub>*<sup>n</sup>*) takes the form:
 
 <p align="center">
-<img width="210" height="40" src=https://latex.codecogs.com/gif.latex?P%28o_%7B1%7D%5E%7Bn%7D%2Cq_%7B1%7D%5E%7Bn&plus;1%7D%29%20%3D%20%5Cprod_%7Bi%3D1%7D%5E%7Bn&plus;1%7DP%28q_%7Bi%7D%20%7C%20q_%7Bt-1%7D%2C%20q_%7Bt-2%7D%29%5Cprod_%7Bi%3D1%7D%5E%7Bn%7DP%28o_%7Bi%7D%7C%20q_%7Bi%7D%29>
+<img width="290" height="50" src=https://latex.codecogs.com/gif.latex?P%28o_%7B1%7D%5E%7Bn%7D%2Cq_%7B1%7D%5E%7Bn&plus;1%7D%29%20%3D%20%5Cprod_%7Bi%3D1%7D%5E%7Bn&plus;1%7DP%28q_%7Bi%7D%20%7C%20q_%7Bt-1%7D%2C%20q_%7Bt-2%7D%29%5Cprod_%7Bi%3D1%7D%5E%7Bn%7DP%28o_%7Bi%7D%7C%20q_%7Bi%7D%29>
 </p>
+
+assuming that *q*<sub>-1</sub> and *q*<sub>-2</sub> = * and *q*<sub>n+1</sub> = *STOP*. Because the argmax is taken over all different tag sequences, brute force search by computing the likelihood of the observation sequence given each possible hidden state sequence is very inefficient, as it is completed in O(|*S*|<sup>3</sup>) complexity. Instead, the **Viterbi algorithm**, a kind of dynamic programming algorithm, is used to make the search computationally more efficient.
+
+Define *n* to be the length of the input sentence and *S<sub>k</sub>* for *k* = -1, 0,...,*n* to be the set of possible tags at position *k* such that *S*<sub>-1</sub> = *S*<sub>0</sub> = * and *S<sub>k</sub>* = *Sk* ∈ 1,...,*n*. Define
 
 <p align="center">
-<img width="210" height="40" src=https://latex.codecogs.com/gif.latex?r%28q_%7B-1%7D%5E%7Bk%7D%29%20%3D%20%5Cprod_%7Bi%3D1%7D%5E%7Bn&plus;1%7DP%28q_%7Bi%7D%20%7C%20q_%7Bt-1%7D%2C%20q_%7Bt-2%7D%29%5Cprod_%7Bi%3D1%7D%5E%7Bn%7DP%28o_%7Bi%7D%7C%20q_%7Bi%7D%29>
+<img width="280" height="50" src=https://latex.codecogs.com/gif.latex?r%28q_%7B-1%7D%5E%7Bk%7D%29%20%3D%20%5Cprod_%7Bi%3D1%7D%5E%7Bn&plus;1%7DP%28q_%7Bi%7D%20%7C%20q_%7Bt-1%7D%2C%20q_%7Bt-2%7D%29%5Cprod_%7Bi%3D1%7D%5E%7Bn%7DP%28o_%7Bi%7D%7C%20q_%7Bi%7D%29>
 </p>
+
+and a dynamic programming table, or a cell, to be:
 
 <p align="center">
-<img width="210" height="30" src=https://latex.codecogs.com/gif.latex?%5Cpi%28k%2C%20u%2C%20v%29%20%3D%20max_%7Bq_%7B-1%7D%5E%7Bk%7D%3Aq_%7Bk-1%7D%20%3Du%2Cq_%7Bk%7D%20%3Dv%7Dr%28q_%7B-1%7D%5E%7Bk%7D%29>
+<img width="280" height="28" src=https://latex.codecogs.com/gif.latex?%5Cpi%28k%2C%20u%2C%20v%29%20%3D%20max_%7Bq_%7B-1%7D%5E%7Bk%7D%3Aq_%7Bk-1%7D%20%3Du%2Cq_%7Bk%7D%20%3Dv%7Dr%28q_%7B-1%7D%5E%7Bk%7D%29>
 </p>
 
+which is the maximum probability of a tag sequence ending in tags *u*, *v* at position *k*. The Viterbi algorithm fills each cell recursively such that the most probable of the extensions of the paths that lead to the current cell at time *k* given that we had already computed the probability of being in every state at time *k*-1. The algorithm essentially works by initializing the first cell as:
 
 <p align="center">
-<img width="210" height="30" src=https://latex.codecogs.com/gif.latex?%5Cpi%280%2C*%2C*%29%3D%201>
+<img width="100" height="20" src=https://latex.codecogs.com/gif.latex?%5Cpi%280%2C*%2C*%29%3D%201>
 </p>
 
+and for any *k* ∈ 1,...,*n*, for any *u* ∈ *S<sub>k-1</sub>* and *v* ∈ *S<sub>k</sub>*, recursively compute:
 
 <p align="center">
-<img width="320" height="25" src=https://latex.codecogs.com/gif.latex?%5Cpi%28k%2C%20u%2C%20v%29%20%3D%20max_%7Bw%5Cin%7BS_%7Bk-2%7D%7D%7D%28%5Cpi%28k-1%2Cw%2Cu%29%5Ccdot%20q%28v%7C%20w%2Cu%29%5Ccdot%20P%28o_%7Bk%7D%7C%20v%29%29>
+<img width="440" height="22" src=https://latex.codecogs.com/gif.latex?%5Cpi%28k%2C%20u%2C%20v%29%20%3D%20max_%7Bw%5Cin%7BS_%7Bk-2%7D%7D%7D%28%5Cpi%28k-1%2Cw%2Cu%29%5Ccdot%20q%28v%7C%20w%2Cu%29%5Ccdot%20P%28o_%7Bk%7D%7C%20v%29%29>
 </p>
+
+and ultimately return:
 
 <p align="center">
-<img width="320" height="25" src=https://latex.codecogs.com/gif.latex?max_%7Bw%5Cin%7BS_%7Bn-1%7D%7D%2Cv%5Cin%7BS_%7Bn%7D%7D%7D%28%5Cpi%28n%2Cu%2Cv%29%5Ccdot%20q%28STOP%7C%20u%2Cv%29%29>
+<img width="340" height="22" src=https://latex.codecogs.com/gif.latex?max_%7Bw%5Cin%7BS_%7Bn-1%7D%7D%2Cv%5Cin%7BS_%7Bn%7D%7D%7D%28%5Cpi%28n%2Cu%2Cv%29%5Ccdot%20q%28STOP%7C%20u%2Cv%29%29>
 </p>
 
+The last component of the Viterbi algorithm is **backpointers**. The goal of the decoder is to not only produce a probability of the most probable tag sequence but also the resulting tag sequence itself. The best state sequence is computed by keeping track of the path of hidden state that led to each state and backtracing the best path in reverse from the end to the start. A full implementation of the Viterbi algorithm is shown.
 
 # Enhancing the POS Tagger
 Though utilizing a hidden Markov model in conjunction with the Viterbi algorithm can produce tagging results with approximately 50-70% accuracy on a test corpus, this is still well below the human agreement upper bound of 97% for POS tagging. To be able to approach a higher accuracy rate for POS tagging, two additional features are utitlized to enhance my POS tagging model. These features are detailed below: 
@@ -98,3 +112,7 @@ Though utilizing a hidden Markov model in conjunction with the Viterbi algorithm
 
 
 ## Morphosyntactic Subcategorization
+
+
+
+# Results
