@@ -72,7 +72,7 @@ Recall that the decoding task is to find:
 where the argmax is taken over all sequences *q*<sub>1</sub>*<sup>n</sup>* such that *q<sub>i</sub>* ∈ *S* for *i* = 1,...,*n* and *S* is the set of all tags. We further assume that *P*(*o*<sub>1</sub>*<sup>n</sup>*,*q*<sub>1</sub>*<sup>n</sup>*) takes the form:
 
 <p align="center">
-<img width="290" height="50" src=https://latex.codecogs.com/gif.latex?P%28o_%7B1%7D%5E%7Bn%7D%2Cq_%7B1%7D%5E%7Bn&plus;1%7D%29%20%3D%20%5Cprod_%7Bi%3D1%7D%5E%7Bn&plus;1%7DP%28q_%7Bi%7D%20%7C%20q_%7Bt-1%7D%2C%20q_%7Bt-2%7D%29%5Cprod_%7Bi%3D1%7D%5E%7Bn%7DP%28o_%7Bi%7D%7C%20q_%7Bi%7D%29>
+<img width="310" height="50" src=https://latex.codecogs.com/gif.latex?P%28o_%7B1%7D%5E%7Bn%7D%2Cq_%7B1%7D%5E%7Bn&plus;1%7D%29%20%3D%20%5Cprod_%7Bi%3D1%7D%5E%7Bn&plus;1%7DP%28q_%7Bi%7D%20%7C%20q_%7Bt-1%7D%2C%20q_%7Bt-2%7D%29%5Cprod_%7Bi%3D1%7D%5E%7Bn%7DP%28o_%7Bi%7D%7C%20q_%7Bi%7D%29>
 </p>
 
 assuming that *q*<sub>-1</sub> and *q*<sub>-2</sub> = * and *q*<sub>n+1</sub> = *STOP*. Because the argmax is taken over all different tag sequences, brute force search by computing the likelihood of the observation sequence given each possible hidden state sequence is very inefficient, as it is completed in O(|*S*|<sup>3</sup>) complexity. Instead, the **Viterbi algorithm**, a kind of dynamic programming algorithm, is used to make the search computationally more efficient.
@@ -98,7 +98,7 @@ which is the maximum probability of a tag sequence ending in tags *u*, *v* at po
 and for any *k* ∈ 1,...,*n*, for any *u* ∈ *S<sub>k-1</sub>* and *v* ∈ *S<sub>k</sub>*, recursively compute:
 
 <p align="center">
-<img width="440" height="22" src=https://latex.codecogs.com/gif.latex?%5Cpi%28k%2C%20u%2C%20v%29%20%3D%20max_%7Bw%5Cin%7BS_%7Bk-2%7D%7D%7D%28%5Cpi%28k-1%2Cw%2Cu%29%5Ccdot%20q%28v%7C%20w%2Cu%29%5Ccdot%20P%28o_%7Bk%7D%7C%20v%29%29>
+<img width="480" height="22" src=https://latex.codecogs.com/gif.latex?%5Cpi%28k%2C%20u%2C%20v%29%20%3D%20max_%7Bw%5Cin%7BS_%7Bk-2%7D%7D%7D%28%5Cpi%28k-1%2Cw%2Cu%29%5Ccdot%20q%28v%7C%20w%2Cu%29%5Ccdot%20P%28o_%7Bk%7D%7C%20v%29%29>
 </p>
 
 and ultimately return:
