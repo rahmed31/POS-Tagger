@@ -117,6 +117,6 @@ In linguistics, Hockett's Design Features are a set of features that characteriz
 
 RARE is a simple way to replace every word or token with the special symbol `_RARE_` whose frequency in the training set is less than or equal to 5. Without this process, words like person names and places that do not appear in the training set but are seen in the test set would have their maximum likelihood estimates of P(*q<sub>i</sub>* ∣ *o<sub>i</sub>*) (i.e., the emission probabilities) undefined.
 
-Morphosyntactic subcategorization is a modification of RARE that serves as a better alternative in that every word token whose frequency is less than or equal to 5 in the training set is replaced by further subcategorization based on a set of morphological cues. For example, we know that words with suffixes like `-ion`, `-ment`, `-ence`, or `-ness`, to name a few, will be a noun, and that adjectives may possess `un-` and `in-` as prefixes or `-ious` and `-ble` as suffixes. 
+Morphosyntactic subcategorization is a modification of RARE that serves as a better alternative in that every word token whose frequency is less than or equal to 5 in the training set is replaced by further subcategorization based on a set of morphological cues. For example, we know that words with suffixes like `-ion`, `-ment`, `-ence`, or `-ness`, just to name a few, will be a noun, and that adjectives may possess `un-` and `in-` as prefixes or `-ious` and `-ble` as suffixes. 
 
 # Results
