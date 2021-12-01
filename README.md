@@ -45,7 +45,7 @@ The second is a Markov assumption that the **transition** probability of a tag i
 
 where *q<sub>-1</sub> = q<sub>-2</sub>* = * is the special start symbol appended to the beginning of every tag sequence and *q<sub>n+1</sub>* = *STOP* is the unique stop symbol marked at the end of every tag sequence.
 
-In many cases, we have a labeled corpus of sentences paired with the correct POS tag sequences `The/DT dogs/NNS run/VB` such as in the Brown corpus, so the problem of POS tagging is that of the supervised learning where we easily calculate the maximum likelihood estimate of a transition probability *P*(*q<sub>i</sub>* | *q<sub>i-1</sub>, q<sub>i-2</sub>*) by counting how often we see the third tag *q<sub>i</sub>* followed by its previous two tags *q<sub>i-1</sub>* and *q<sub>i-2</sub>* divided by the number of occurrences of the two tags *q<sub>i-1</sub>* and *q<sub>i-2</sub>*:
+In many cases, we have a labeled corpus of sentences paired with the correct POS tag sequences `The/DT boys/NNS eat/VB` such as in the Brown corpus, so the problem of POS tagging is that of the supervised learning where we easily calculate the maximum likelihood estimate of a transition probability *P*(*q<sub>i</sub>* | *q<sub>i-1</sub>, q<sub>i-2</sub>*) by counting how often we see the third tag *q<sub>i</sub>* followed by its previous two tags *q<sub>i-1</sub>* and *q<sub>i-2</sub>* divided by the number of occurrences of the two tags *q<sub>i-1</sub>* and *q<sub>i-2</sub>*:
 
 <p align="center">
 <img width="250" height="47" src=https://latex.codecogs.com/gif.latex?P%28q_%7Bi%7D%7Cq_%7Bi-1%7D%2Cq_%7Bi-2%7D%29%20%3D%20%5Cfrac%7BC%28q_%7Bi-2%7D%2Cq_%7Bi-1%7D%2Cq_%7Bi%7D%29%7D%7BC%28q_%7Bi-2%7D%2Cq_%7Bi-1%7D%29%7D>
