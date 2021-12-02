@@ -21,10 +21,12 @@ START_SYMBOL = '*'
 STOP_SYMBOL = 'STOP'
 LOG_ZERO = -1000
 
+#Error with algorithm, seems like pi and bp dictionaries aren't updating with correctly
 def viterbi_algorithm(test_sentences, pos_set, known_words, q_probs, e_probs):
     """ Applying the Viterbi algorithm with time complexity O(n*k^2) """
 
     tagged = []
+
     # pi[(k, u, v)]: max probability of a tag sequence ending in tags u, v at position k
     pi = defaultdict(float)
     # bp[(k, u, v)]: backpointers to recover the argmax of pi[(k, u, v)]
@@ -45,7 +47,7 @@ def viterbi_algorithm(test_sentences, pos_set, known_words, q_probs, e_probs):
         sent_words = [word if word in known_words else morphosyntactic_subcategorize(word) for word in original_sentence]
         n = len(sent_words)
 
-        for k in range(1, n):
+        for k in range(1, n + 1):
             for u in S(k - 1):
                 for v in S(k):
 
@@ -58,6 +60,7 @@ def viterbi_algorithm(test_sentences, pos_set, known_words, q_probs, e_probs):
                             if score > max_score:
                                 max_score = score
                                 max_tag = w
+
                     pi[(k, u, v)] = max_score
                     bp[(k, u, v)] = max_tag
 
@@ -76,7 +79,7 @@ def viterbi_algorithm(test_sentences, pos_set, known_words, q_probs, e_probs):
         tags.append(v_max)
         tags.append(u_max)
 
-        #Error occurs at this stage:
+        #This portion of the code errors out; seems like pi and bp dictionaries aren't updating with values correctly
         for i, k in enumerate(range(n-2, 0, -1)):
             tags.append(bp[(k+2, tags[i+1], tags[i])])
         tags.reverse()
@@ -99,10 +102,11 @@ if __name__ == '__main__':
     pos_set = pickle.load(open(output_path + "pos_set.pickle", "rb" ))
 
     test_sentences, tags = clean_text('data/test_corpus.txt')
-    # print(test_sentences)
 
-    tagged = viterbi_algorithm(test_sentences, pos_set, known_words, q_probs, e_probs)
-    # print(tagged)
+    tagged_sentences = viterbi_algorithm(test_sentences, pos_set, known_words, q_probs, e_probs)
+    # print(tagged_sentences)
+
+    # tagged_sentences = pickle.dump(tagged, open(output_path + "tagged_sentences.pickle", "wb"))
 
     finish = time.perf_counter()
     print(f'Finished in {round(finish-start, 2)} second(s)')
