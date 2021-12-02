@@ -166,3 +166,5 @@ When taking a look at each file, you will notice that they each contain an in-de
 **THIS SECTION WILL CONTINUE TO BE MODIFIED UNTIL CODE IS DEBUGGED**
 
 # What Files You Should Run to Test the POS Tagger
+
+**SECTION INFORMATION WILL BE ADDED WHEN CODE IS DEBUGGED**
