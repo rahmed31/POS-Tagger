@@ -168,7 +168,7 @@ Each file is **briefly** explained in the order that they were created and used:
 2. `emission_probs.py` is used to apply morphosyntactic subcategorization to the sentences list to be able to calculate the emission probabilities for each word/POS pair as well as get a list of "known words" from the sentences lists. 
 3. `transmission_probs.py` is used to experimentally calculate the λ values for deleted interpolation, find the interpolated transmission probabilities for each ngram, and ultimtately deduce the overall accuracy of the POS tagger using necessary components retrieved from `train_model.py` and `emission_probs.py`.
 4. `viterbi.py` is used to apply the Viterbi algorithm to retrieve the most probabilistic sequence of POS tags for each sentence in the test set. 
-5. `accuracy.py` is used to find the accuracy of the Viterbi algorithm by comparing the returned POS sequences for each test sentence to the actual POS for each test sentence. 
+5. `accuracy.py` is used to find the accuracy of the Viterbi algorithm by comparing the calculated POS sequences for each test sentence to the actual POS sequences for each test sentence. 
 
 When taking a look at each file, you will notice that they each contain an in-depth description of how they work and the purpose of all functions that are within them. You will also notice the order in which I calculate all necessary pieces of data (found in each of my main drivers) to ultimately create my POS tagger. Lastly, you will notice that I modularized all functions in the event that they needed to be imported and reused in different files.
 
