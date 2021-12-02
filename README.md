@@ -163,6 +163,6 @@ Each file is **briefly** explained in the order that they were created and used:
 
 When taking a look at each file, you will notice that they each contain an in-depth description of how they work and the purpose of all functions that are within them. You will also notice the order in which I calculate all necessary pieces of data (found in each of my main drivers) to ultimately create my POS tagger. Lastly, you will notice that I modularized all functions in the event that they needed to be imported and reused in different files.
 
-# Acknowledgments
+**THIS SECTION WILL CONTINUE TO BE MODIFIED UNTIL CODE IS DEBUGGED**
 
-I would like to thank data scientist Seong Hyun Hwang for providing well-documented and organized material regarding the mathematics and logic behind part-of-speech tagging using trigram hidden Markov models. 
+# What Files You Should Run to Test the POS Tagger
