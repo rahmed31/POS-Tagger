@@ -168,3 +168,8 @@ When taking a look at each file, you will notice that they each contain an in-de
 # What Files You Should Run to Test the POS Tagger
 
 **SECTION INFORMATION WILL BE ADDED WHEN CODE IS DEBUGGED**
+
+# Resources
+
+**TO BE COMPILED**
+
