@@ -11,7 +11,7 @@
 #INCOMPLETE FUNCTION
 def calculate_accuracy(tags, test_set):
     """ Function to calculate the accuracy of the Viterbi algorithm by comparing the output of the POS tagger to the actual tags
-        provided in each validation set. """
+        provided in the test set. """
 
         num_correct = 0
         total = 0
