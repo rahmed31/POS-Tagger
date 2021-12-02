@@ -21,7 +21,7 @@ START_SYMBOL = '*'
 STOP_SYMBOL = 'STOP'
 LOG_ZERO = -1000
 
-def viterbi_algorithm(test_sentences, pos_set, known_words, q_probs, e_values):
+def viterbi_algorithm(test_sentences, pos_set, known_words, q_probs, e_probs):
     """ Applying the Viterbi algorithm with time complexity O(n*k^2) """
 
     tagged = []
@@ -53,8 +53,8 @@ def viterbi_algorithm(test_sentences, pos_set, known_words, q_probs, e_values):
                     max_tag = None
 
                     for w in S(k - 2):
-                        if e_values.get((sent_words[k-1], v), 0) != 0:
-                            score = pi.get((k-1, w, u), LOG_ZERO) + q_probs.get((w, u, v), LOG_ZERO) + e_values.get((sent_words[k-1], v))
+                        if e_probs.get((sent_words[k-1], v), 0) != 0:
+                            score = pi.get((k-1, w, u), LOG_ZERO) + q_probs.get((w, u, v), LOG_ZERO) + e_probs.get((sent_words[k-1], v))
                             if score > max_score:
                                 max_score = score
                                 max_tag = w
@@ -76,6 +76,7 @@ def viterbi_algorithm(test_sentences, pos_set, known_words, q_probs, e_values):
         tags.append(v_max)
         tags.append(u_max)
 
+        #Error occurs at this stage:
         for i, k in enumerate(range(n-2, 0, -1)):
             tags.append(bp[(k+2, tags[i+1], tags[i])])
         tags.reverse()
@@ -93,14 +94,14 @@ if __name__ == '__main__':
     start = time.perf_counter()
 
     q_probs = dict(pickle.load(open(output_path + "q_probs.pickle", "rb" )))
-    e_values = dict(pickle.load(open(output_path + "e_probs.pickle", "rb" )))
+    e_probs = dict(pickle.load(open(output_path + "e_probs.pickle", "rb" )))
     known_words = pickle.load(open(output_path + "known_words.pickle", "rb" ))
     pos_set = pickle.load(open(output_path + "pos_set.pickle", "rb" ))
 
     test_sentences, tags = clean_text('data/test_corpus.txt')
     # print(test_sentences)
 
-    tagged = viterbi_algorithm(test_sentences, pos_set, known_words, q_probs, e_values)
+    tagged = viterbi_algorithm(test_sentences, pos_set, known_words, q_probs, e_probs)
     # print(tagged)
 
     finish = time.perf_counter()
