@@ -22,7 +22,8 @@ import pickle
 import numpy as np
 from viterbi import viterbi_algorithm
 from emission_probs import replace_rare
-# from accuracy import calculate_accuracy
+from accuracy import calculate_accuracy
+from train_model import clean_text
 
 output_path = 'data/model_data/'
 START_SYMBOL = '*'
@@ -43,28 +44,30 @@ def lambda_candidates(start, end, step):
 
     return result
 
-def find_lambdas(candidate_values, test_set, taglists, unigrams, bigrams, trigrams, e_values):
+#Need to fix argument inputs for this function
+def find_lambdas(candidate_values, taglists, pos_set, test_set, test_tags, unigrams, bigrams, trigrams, e_probs):
     """ Function to experimentally determine the hyperparameters (i.e., lambda values) for the deleted interpolation
-        algorithm. This function utilizes a 10-fold cross validation technique to determine which lambda values maximize
-        the accuracy of the viterbi algorithm when determining the POS tags for the validation sets. It returns a list containing
-        the lambda values and a dictionary containing the log transition probabilities for each POS trigram present in the training
-        corpus. This function specifically caters to files with the format of the Brown corpus. Amortized runtime complexity: O(n) """
+        algorithm. It returns a list containing the lambda values and a dictionary containing the log transition probabilities
+        for each POS trigram present in the training corpus -- those of which have maximized the accuracy of the Viterbi algorithm.
+        This function specifically caters to files with the format of the Brown corpus. Amortized runtime complexity: O(n) """
 
     max_accuracy = 0
     lambda_values = []
-    q_values = {}
+    q_probs = {}
 
     for lambdas in candidate_values:
         log_values = transition_probs(taglists, unigrams, bigrams, trigrams, lambdas)
-        tags = viterbi_algorithm(test_set, taglist, known_words, q_values, e_values)
-        accuracy = calculate_accuracy(tags, test_set)
+        tagged_sentences = viterbi_algorithm(test_set, pos_set, known_words, q_probs, e_probs)
+
+        model_tags = [[wordtag.rsplit('/', 1)[-1] for wordtag in line.strip().split(" ")] for line in tagged_sentences]
+        accuracy = calculate_accuracy(test_tags, model_tags)
 
         if accuracy > max_accuracy:
             max_accuracy = accuracy
             lambda_values = lamdas
-            q_values = log_values
+            q_probs = log_values
 
-    return lambda_values, q_values
+    return lambda_values, q_probs
 
 #might need to modify this function
 def transition_probs(taglists, unigrams, bigrams, trigrams, lambdas):
@@ -82,9 +85,9 @@ def transition_probs(taglists, unigrams, bigrams, trigrams, lambdas):
     trigram_p = {(a, b, c): math.log(trigrams[(a, b, c)], 2) - math.log(bigrams[(a, b)], 2) for a, b, c in trigrams}
 
     #calculating log transmission probabilities
-    q_values = {(a, b , c): math.log(lambdas[2] * (2**trigram_p[(a, b, c)]) + lambdas[1] * (2**bigram_p[(b, c)]) + lambdas[0] * (2**unigram_p[(c,)]), 2) for a, b, c in trigram_p}
+    q_probs = {(a, b , c): math.log(lambdas[2] * (2**trigram_p[(a, b, c)]) + lambdas[1] * (2**bigram_p[(b, c)]) + lambdas[0] * (2**unigram_p[(c,)]), 2) for a, b, c in trigram_p}
 
-    return q_values
+    return q_probs
 
 if __name__ == '__main__':
 
@@ -95,9 +98,11 @@ if __name__ == '__main__':
     trigrams = dict(pickle.load(open(output_path + "trigrams.pickle", "rb" )))
 
     taglists = pickle.load(open(output_path + "taglists.pickle", "rb" ))
-    e_values = dict(pickle.load(open(output_path + "e_probs.pickle", "rb" )))
+    e_probs = dict(pickle.load(open(output_path + "e_probs.pickle", "rb" )))
     known_words = pickle.load(open(output_path + "known_words.pickle", "rb" ))
     pos_set = pickle.load(open(output_path + "pos_set.pickle", "rb" ))
+
+    test_set, test_tags = clean_text('data/test_corpus.txt')
 
     #DOES NOT NEED TO BE RUN AGAIN
     # candidate_values = lambda_candidates(0.001, 1, 0.001)
@@ -107,7 +112,7 @@ if __name__ == '__main__':
     # print(len(candidate_values))
 
     #NOT GOING TO USE THIS FUNCTION AT THE MOMENT
-    # lambda_values, q_probs = find_lambdas(candidate_values, taglists, unigrams, bigrams, trigrams, e_values)
+    # lambda_values, q_probs = find_lambdas(candidate_values, taglists, pos_set, test_set, test_tags, unigrams, bigrams, trigrams, e_probs)
     # print(q_probs)
 
     #found lambda values online because viterbi algorithm doesn't work yet
