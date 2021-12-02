@@ -8,8 +8,8 @@
 #used to achieve this so that unknown POS tag sequences that may appear in the test corpus can still be predicted
 #with a non zero probability using lower order ngrams. Deleted interpolation also requires the use of lambda
 #values (i.e., lambda1, lambda2, lambda3) to help with maximizing the accuracy of the POS tagger when utilizing lower
-#order ngrams. These hyperparameters will be experimentally determined in this file such that the accuracy of the POS tagger is
-#maximized when using 10-fold cross validation on the training corpus.
+#order ngrams. These hyperparameters are experimentally determined in this file such that the accuracy of the POS tagger is
+#maximized.
 #
 #Copyright (C) 2021, released under MIT License
 #Author: Raihan Ahmed, Chicago, IL
@@ -22,9 +22,10 @@ import pickle
 import numpy as np
 from viterbi import viterbi_algorithm
 from emission_probs import replace_rare
-from train_model import clean_text
+# from accuracy import calculate_accuracy
 
 output_path = 'data/model_data/'
+START_SYMBOL = '*'
 
 def lambda_candidates(start, end, step):
     """ Function that generates all possible sets of lambda values that sum to 1 for deleted interpolation algorithm.
@@ -81,19 +82,9 @@ def transition_probs(taglists, unigrams, bigrams, trigrams, lambdas):
     trigram_p = {(a, b, c): math.log(trigrams[(a, b, c)], 2) - math.log(bigrams[(a, b)], 2) for a, b, c in trigrams}
 
     #calculating log transmission probabilities
-    q_values = {(a, b , c): math.log(lambdas[0] * (2**trigram_p[(a, b, c)]) + lambdas[1] * (2**bigram_p[(b, c)]) + lambdas[2] * (2**unigram_p[(c,)]), 2) for a, b, c in trigram_p}
+    q_values = {(a, b , c): math.log(lambdas[2] * (2**trigram_p[(a, b, c)]) + lambdas[1] * (2**bigram_p[(b, c)]) + lambdas[0] * (2**unigram_p[(c,)]), 2) for a, b, c in trigram_p}
 
     return q_values
-
-#INCOMPLETE FUNCTION
-# def calculate_accuracy(tags, test_set):
-    """ Function to calculate the accuracy of the Viterbi algorithm by comparing the output of the POS tagger to the actual tags
-        provided in each validation set. """
-
-
-
-
-        # return accuracy
 
 if __name__ == '__main__':
 
@@ -103,23 +94,27 @@ if __name__ == '__main__':
     bigrams = dict(pickle.load(open(output_path + "bigrams.pickle", "rb" )))
     trigrams = dict(pickle.load(open(output_path + "trigrams.pickle", "rb" )))
 
-    tokenlists = pickle.load(open(output_path + "tokenlists.pickle", "rb" ))
     taglists = pickle.load(open(output_path + "taglists.pickle", "rb" ))
     e_values = dict(pickle.load(open(output_path + "e_probs.pickle", "rb" )))
     known_words = pickle.load(open(output_path + "known_words.pickle", "rb" ))
     pos_set = pickle.load(open(output_path + "pos_set.pickle", "rb" ))
 
+    #DOES NOT NEED TO BE RUN AGAIN
     # candidate_values = lambda_candidates(0.001, 1, 0.001)
-    #
+
     # candidate_values = pickle.dump(candidate_values, open(output_path + "candidate_values.pickle", "wb"))
     candidate_values = pickle.load(open(output_path + "candidate_values.pickle", "rb"))
+    # print(len(candidate_values))
 
-    print(len(candidate_values))
-
-    # lambda_values, q_values = find_lambdas(candidate_values, taglists, unigrams, bigrams, trigrams, e_values)
+    #NOT GOING TO USE THIS FUNCTION AT THE MOMENT
+    # lambda_values, q_probs = find_lambdas(candidate_values, taglists, unigrams, bigrams, trigrams, e_values)
     # print(q_probs)
 
-    # q_probs = pickle.dump(q_probs, open(output_path + "q_probs.pickle", "wb" ))
+    #found lambda values online because viterbi algorithm doesn't work yet
+    q_probs = transition_probs(taglists, unigrams, bigrams, trigrams, [0.125, 0.394, 0.481])
+    # print(q_probs)
+
+    q_probs = pickle.dump(q_probs, open(output_path + "q_probs.pickle", "wb" ))
     # lambda_values = pickle.dump(lambda_values, open(output_path + "lamnda_values.pickle", "wb" ))
 
     finish = time.perf_counter()
