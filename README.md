@@ -13,6 +13,12 @@ To view a subset of the Brown Corpus and how it is annotated, [click here](http:
 
 To view the original manual and tagset used in the Brown Corpus, [click here](http://korpus.uib.no/icame/manuals/BROWN/INDEX.HTM).
 
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+To view the results of the POS Tagger, [click here](#results).
+
+For a basic rundown of the repository, [click here](#rundown-of-respository).
+
 To skip to the section on how to run the POS Tagger yourself, [click here](#how-to-test-the-pos-tagger-yourself).
 
 # What is Part-of-Speech Tagging?
