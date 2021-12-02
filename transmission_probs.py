@@ -47,7 +47,7 @@ def lambda_candidates(start, end, step):
 
     return result
 
-#Need to fix argument inputs for this function
+#This function is not going to be used, though it could be in order to find the best set of lambda values
 def find_lambdas(candidate_values, taglists, pos_set, test_set, test_tags, unigrams, bigrams, trigrams, e_probs):
     """ Function to experimentally determine the hyperparameters (i.e., lambda values) for the deleted interpolation
         algorithm. It returns a list containing the lambda values and a dictionary containing the log transition probabilities
@@ -72,7 +72,6 @@ def find_lambdas(candidate_values, taglists, pos_set, test_set, test_tags, unigr
 
     return lambda_values, q_probs
 
-#might need to modify this function
 def transition_probs(taglists, unigrams, bigrams, trigrams, lambdas):
     """ Function to find log transition probabilities for each POS trigram in the training corpus using deleted interpolation.
         It returns a dictionary containing the corpus' log transition probabilities for each POS trigram present in the training corpus.
@@ -111,9 +110,7 @@ if __name__ == '__main__':
     # candidate_values = lambda_candidates(0.001, 1, 0.001)
 
     # candidate_values = pickle.dump(candidate_values, open(output_path + "candidate_values.pickle", "wb"))
-    candidate_values = pickle.load(open(output_path + "candidate_values.pickle", "rb"))
-    # print(len(candidate_values))
-    # print(candidate_values)
+    # candidate_values = pickle.load(open(output_path + "candidate_values.pickle", "rb"))
 
     #NOT GOING TO USE THIS FUNCTION AT THE MOMENT
     # lambda_values, q_probs = find_lambdas(candidate_values, taglists, pos_set, test_set, test_tags, unigrams, bigrams, trigrams, e_probs)
