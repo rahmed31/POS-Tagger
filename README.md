@@ -1,5 +1,5 @@
 ### File completion list (section will be removed):
-**In order that they're used:**
+**In the order that they're used:**
 1. 'train_model.py': :white_check_mark:
 2. 'emission_probs.py': :white_check_mark:
 3. 'transmission_probs.py': :white_check_mark:
@@ -172,11 +172,11 @@ Each file is **briefly** explained in the order that they were created and used:
 
 When taking a look at each file, you will notice that they each contain an in-depth description of how they work and the purpose of all functions that are within them. You will also notice the order in which I calculate all necessary pieces of data (found in each of my main drivers) to ultimately create my POS tagger. Lastly, you will notice that I modularized all functions in the event that they needed to be imported and reused in different files.
 
-**THIS SECTION WILL CONTINUE TO BE MODIFIED UNTIL CODE IS DEBUGGED**
+**THIS SECTION WILL CONTINUE TO BE MODIFIED UNTIL REPOSITORY IS FINALIZED**
 
-# What Files You Should Run to Test the POS Tagger
+# How to Test the POS Tagger Yourself
 
-**SECTION INFORMATION WILL BE ADDED WHEN CODE IS DEBUGGED**
+**SECTION INFORMATION WILL BE ADDED WHEN REPOSITORY IS FINALIZED**
 
 # Resources
 
