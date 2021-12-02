@@ -39,7 +39,10 @@ def lambda_candidates(start, end, step):
     for i in range(len(l)):
         for j in range(len(l)):
             for k in range(len(l)):
-                if (l[i] + l[j] + l[k] == 1):
+                #we do not want l[k] (lambda3 for trigram probability) to be any smaller than 0.4 for the sake
+                #of ensuring that the trigram probability is weighted heavier than the bigram or unigram probabilities.
+                #This decreases the number of lambda candidate values from 489,659 to 179,700.
+                if (l[i] + l[j] + l[k] == 1) and l[k] >= 0.4:
                     result.append([l[i], l[j], l[k]])
 
     return result
@@ -110,6 +113,7 @@ if __name__ == '__main__':
     # candidate_values = pickle.dump(candidate_values, open(output_path + "candidate_values.pickle", "wb"))
     candidate_values = pickle.load(open(output_path + "candidate_values.pickle", "rb"))
     # print(len(candidate_values))
+    # print(candidate_values)
 
     #NOT GOING TO USE THIS FUNCTION AT THE MOMENT
     # lambda_values, q_probs = find_lambdas(candidate_values, taglists, pos_set, test_set, test_tags, unigrams, bigrams, trigrams, e_probs)
