@@ -89,10 +89,10 @@ def emission_probs(tokenlists, taglists):
             e_values_c[(word, tag)] += 1
             tag_c[tag] += 1
 
-    e_values = {(word, tag): math.log(e_values_c[(word, tag)], 2) - math.log(tag_c[tag], 2) for word, tag in e_values_c}
+    e_probs = {(word, tag): math.log(e_values_c[(word, tag)], 2) - math.log(tag_c[tag], 2) for word, tag in e_values_c}
     tagset = set(tag_c)
 
-    return e_values, tagset
+    return e_probs, tagset
 
 if __name__ == '__main__':
 
