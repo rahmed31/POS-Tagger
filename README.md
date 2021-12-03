@@ -6,7 +6,7 @@
 4. `viterbi.py`: :x:
 5. `accuracy.py`: :white_check_mark:
 
-# POS-Tagger
+# Brown Corpus Part-of-Speech Tagger
 This repository details the creation of a Part-of-Speech tagger using a trigram hidden Markov model (HMM) and the Viterbi algorithm to predict word tags in a word sequence. It is trained and evaluated on a real-world text called the Brown corpus, which contains approximately 1 million words from 500 texts across 15 different genres. The Brown corpus was compiled by Henry Kučera and W. Nelson Francis at Brown University in Rhode Island and was published in the United States in 1961. For more information regarding the history of the Brown corpus, [click here](https://en.wikipedia.org/wiki/Brown_Corpus).
 
 To view a subset of the Brown Corpus and how it is annotated, [click here](http://fid.cl/courses/nlp/hw/ca_train.txt).
@@ -21,7 +21,7 @@ For a basic rundown of the repository, [click here](#rundown-of-respository).
 
 To skip to the section on how to run the POS Tagger yourself, [click here](#how-to-test-the-pos-tagger-yourself).
 
-# What is Part-of-Speech Tagging?
+# What is Part-of-Speech (POS) Tagging?
 
 In corpus linguistics, part-of-speech tagging (POS tagging, PoS tagging, or POST), also known as "grammatical tagging," is the process of marking up words and punctuations in a text (corpus) as corresponding to particular parts of speech, based on both their definition and their context. Once performed by hand, POS tagging is now done through the use of algorithms which associate discrete terms, as well as "hidden" parts of speech, by a set of descriptive tags. This application merely scratches the surface of computational linguistics. POS-tagging algorithms fall into two distinctive categories: rule-based and stochastic. Because applying a rule-based model to predict tags in a sequence is cumbersome and restricted to a linguist's understanding of allowable sentences in the context of language productivity, a stochastic approach is instead taken to assign POS tags to words in a sequence through the use of a trigram hidden Markov model and the Viterbi algorithm. 
 
