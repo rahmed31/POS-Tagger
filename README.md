@@ -178,7 +178,7 @@ Each file is **briefly** explained in the order that they were created and used:
 4. `viterbi.py` is used to apply the Viterbi algorithm to retrieve the most probabilistic sequence of POS tags for each sentence in the test set. 
 5. `accuracy.py` is used to find the accuracy of the Viterbi algorithm by comparing the calculated POS sequences for each test sentence to the actual POS sequences for each test sentence. 
 
-**Each file contains an in-depth description of how they work and the purpose of all functions that are within them.** While looking at them, you will also notice the order in which I calculate all necessary pieces of data (found in each of my main drivers) to ultimately create my POS tagger. Lastly, you will notice that I modularize all functions in the event that they needed to be imported and reused in different files.
+**Each file contains an in-depth description of how they work and the purpose of all functions that are within them.** While looking at each file in order, you will also notice how, and the order in which, I calculate all necessary pieces of data (found in each of my main drivers) to ultimately create my POS tagger. Lastly, you will notice that I modularize all functions in the event that they needed to be imported and reused in different files.
 
 **THIS SECTION WILL CONTINUE TO BE MODIFIED UNTIL REPOSITORY IS FINALIZED**
 
