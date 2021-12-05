@@ -33,7 +33,7 @@ def viterbi_algorithm(test_sentences, pos_set, known_words, q_probs, e_probs):
     bp = {}
 
     # Initialization
-    pi[(0, START_SYMBOL, START_SYMBOL)] = 1.0
+    pi[(0, START_SYMBOL, START_SYMBOL)] = 0.0
 
     # Define tagsets S(k)
     def S(k):
@@ -47,7 +47,12 @@ def viterbi_algorithm(test_sentences, pos_set, known_words, q_probs, e_probs):
         sent_words = [word if word in known_words else morphosyntactic_subcategorize(word) for word in original_sentence]
         n = len(sent_words)
 
+        # pi = defaultdict(float)
+        # pi[(0, START_SYMBOL, START_SYMBOL)] = 0.0
+        # bp = {}
+
         for k in range(1, n + 1):
+            # print("word: " + str(k))
             for u in S(k - 1):
                 for v in S(k):
 
@@ -57,15 +62,23 @@ def viterbi_algorithm(test_sentences, pos_set, known_words, q_probs, e_probs):
                     for w in S(k - 2):
                         if e_probs.get((sent_words[k-1], v), 0) != 0:
                             score = pi.get((k-1, w, u), LOG_ZERO) + q_probs.get((w, u, v), LOG_ZERO) + e_probs.get((sent_words[k-1], v))
-                            if score > max_score:
+
+                            if score < max_score:
                                 max_score = score
                                 max_tag = w
+
+                                # print(max_score)
+                                # print(max_tag)
 
                     pi[(k, u, v)] = max_score
                     bp[(k, u, v)] = max_tag
 
         max_score = float('-Inf')
-        u_max, v_max = None, None
+        u_max = None
+        v_max = None
+
+        # print(pi)
+        # print(bp)
 
         for u in S(n - 1):
             for v in S(n):
@@ -78,6 +91,8 @@ def viterbi_algorithm(test_sentences, pos_set, known_words, q_probs, e_probs):
         tags = deque()
         tags.append(v_max)
         tags.append(u_max)
+
+        # print(tags)
 
         #This portion of the code errors out; seems like pi and bp dictionaries aren't updating with values correctly
         for i, k in enumerate(range(n-2, 0, -1)):
@@ -102,6 +117,11 @@ if __name__ == '__main__':
     pos_set = pickle.load(open(output_path + "pos_set.pickle", "rb" ))
 
     test_sentences, tags = clean_text('data/test_corpus.txt')
+    # print(e_probs)
+    # print(pos_set)
+    # print(len(pos_set))
+    # print(q_probs)
+    # print(sorted(q_probs.items(), key=lambda x: x[1]))
 
     tagged_sentences = viterbi_algorithm(test_sentences, pos_set, known_words, q_probs, e_probs)
     # print(tagged_sentences)
