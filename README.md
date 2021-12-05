@@ -1,12 +1,12 @@
 ### File completion list (section will be removed):
 **In the order that they're used:**
-1. 'train_model.py': :white_check_mark:
-2. 'emission_probs.py': :white_check_mark:
-3. 'transmission_probs.py': :white_check_mark:
-4. 'viterbi.py': :x:
-5. 'accuracy.py': :white_check_mark:
+1. `train_model.py`: :white_check_mark:
+2. `emission_probs.py`: :white_check_mark:
+3. `transmission_probs.py`: :white_check_mark:
+4. `viterbi.py`: :x:
+5. `accuracy.py`: :white_check_mark:
 
-# POS-Tagger
+# Brown Corpus Part-of-Speech Tagger
 This repository details the creation of a Part-of-Speech tagger using a trigram hidden Markov model (HMM) and the Viterbi algorithm to predict word tags in a word sequence. It is trained and evaluated on a real-world text called the Brown corpus, which contains approximately 1 million words from 500 texts across 15 different genres. The Brown corpus was compiled by Henry Kučera and W. Nelson Francis at Brown University in Rhode Island and was published in the United States in 1961. For more information regarding the history of the Brown corpus, [click here](https://en.wikipedia.org/wiki/Brown_Corpus).
 
 To view a subset of the Brown Corpus and how it is annotated, [click here](http://fid.cl/courses/nlp/hw/ca_train.txt).
@@ -21,7 +21,7 @@ For a basic rundown of the repository, [click here](#rundown-of-respository).
 
 To skip to the section on how to run the POS Tagger yourself, [click here](#how-to-test-the-pos-tagger-yourself).
 
-# What is Part-of-Speech Tagging?
+# What is Part-of-Speech (POS) Tagging?
 
 In corpus linguistics, part-of-speech tagging (POS tagging, PoS tagging, or POST), also known as "grammatical tagging," is the process of marking up words and punctuations in a text (corpus) as corresponding to particular parts of speech, based on both their definition and their context. Once performed by hand, POS tagging is now done through the use of algorithms which associate discrete terms, as well as "hidden" parts of speech, by a set of descriptive tags. This application merely scratches the surface of computational linguistics. POS-tagging algorithms fall into two distinctive categories: rule-based and stochastic. Because applying a rule-based model to predict tags in a sequence is cumbersome and restricted to a linguist's understanding of allowable sentences in the context of language productivity, a stochastic approach is instead taken to assign POS tags to words in a sequence through the use of a trigram hidden Markov model and the Viterbi algorithm. 
 
@@ -65,7 +65,7 @@ The second is a Markov assumption that the **transition** probability of a tag i
 
 where *q<sub>-1</sub> = q<sub>-2</sub>* = * is the special start symbol appended to the beginning of every tag sequence and *q<sub>n+1</sub>* = *STOP* is the unique stop symbol marked at the end of every tag sequence.
 
-In many cases, we have a labeled corpus of sentences paired with the correct POS tag sequences `The/DT boys/NNS eat/VB` such as in the Brown corpus, so the problem of POS tagging is that of the supervised learning where we easily calculate the maximum likelihood estimate of a transition probability *P*(*q<sub>i</sub>* | *q<sub>i-1</sub>, q<sub>i-2</sub>*) by counting how often we see the third tag *q<sub>i</sub>* followed by its previous two tags *q<sub>i-1</sub>* and *q<sub>i-2</sub>* divided by the number of occurrences of the two tags *q<sub>i-1</sub>* and *q<sub>i-2</sub>* (Eq. 5):
+In many cases, we have a labeled corpus of sentences paired with the correct POS tag sequences `The/DT boys/NNS eat/VB` such as in the Brown corpus, so the problem of POS tagging is that of the supervised learning portion, where we can easily calculate the maximum likelihood estimate of a transition probability *P*(*q<sub>i</sub>* | *q<sub>i-1</sub>, q<sub>i-2</sub>*) by counting how often we see the third tag *q<sub>i</sub>* followed by its previous two tags *q<sub>i-1</sub>* and *q<sub>i-2</sub>* divided by the number of occurrences of the two tags *q<sub>i-1</sub>* and *q<sub>i-2</sub>* (Eq. 5):
 
 <p align="center">
 <img width="250" height="47" src=https://latex.codecogs.com/gif.latex?P%28q_%7Bi%7D%7Cq_%7Bi-1%7D%2Cq_%7Bi-2%7D%29%20%3D%20%5Cfrac%7BC%28q_%7Bi-2%7D%2Cq_%7Bi-1%7D%2Cq_%7Bi%7D%29%7D%7BC%28q_%7Bi-2%7D%2Cq_%7Bi-1%7D%29%7D>
@@ -178,7 +178,7 @@ Each file is **briefly** explained in the order that they were created and used:
 4. `viterbi.py` is used to apply the Viterbi algorithm to retrieve the most probabilistic sequence of POS tags for each sentence in the test set. 
 5. `accuracy.py` is used to find the accuracy of the Viterbi algorithm by comparing the calculated POS sequences for each test sentence to the actual POS sequences for each test sentence. 
 
-When taking a look at each file, you will notice that they each contain an in-depth description of how they work and the purpose of all functions that are within them. You will also notice the order in which I calculate all necessary pieces of data (found in each of my main drivers) to ultimately create my POS tagger. Lastly, you will notice that I modularized all functions in the event that they needed to be imported and reused in different files.
+**Each file contains an in-depth description of how they work and the purpose of all functions that are within them.** While looking at each file in order, you will also notice how, and the order in which, I calculate all necessary pieces of data (found in each of my main drivers) to ultimately create my POS tagger. Lastly, you will notice that I modularize all functions in the event that they needed to be imported and reused in different files.
 
 **THIS SECTION WILL CONTINUE TO BE MODIFIED UNTIL REPOSITORY IS FINALIZED**
 
