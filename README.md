@@ -4,7 +4,8 @@
 2. `emission_probs.py`: :white_check_mark:
 3. `transmission_probs.py`: :white_check_mark:
 4. `viterbi.py`: :x:
-5. `accuracy.py`: :white_check_mark:
+5. `viterbi1.py` (viterbi test file): :x:
+6. `accuracy.py`: :white_check_mark:
 
 # Brown Corpus Part-of-Speech Tagger
 This repository details the creation of a Part-of-Speech tagger using a trigram hidden Markov model (HMM) and the Viterbi algorithm to predict word tags in a word sequence. It is trained and evaluated on a real-world text called the Brown corpus, which contains approximately 1 million words from 500 texts across 15 different genres. The Brown corpus was compiled by Henry Kučera and W. Nelson Francis at Brown University in Rhode Island and was published in the United States in 1961. For more information regarding the history of the Brown corpus, [click here](https://en.wikipedia.org/wiki/Brown_Corpus).
