@@ -26,6 +26,8 @@ POS_SET = set()
 def viterbi_algorithm(test_sentences, known_words, q_probs, e_probs):
     """ Applying the Viterbi algorithm with time complexity O(n*k^2) """
 
+    tagged = []
+
     # Define tagsets S(k)
     def S(k, token = None):
         if k in (-1, 0):
@@ -40,7 +42,7 @@ def viterbi_algorithm(test_sentences, known_words, q_probs, e_probs):
                     tags.add(b)
                     POS_SET.add(b)
 
-            return set(tags)
+            return tags
 
     def reset():
         global POS_SET
@@ -60,9 +62,9 @@ def viterbi_algorithm(test_sentences, known_words, q_probs, e_probs):
 
         for k in range(1, n+1):
 
-            U = S(k - 1, sent_words[k-1])
+            U = S(k-1, sent_words[k-1])
             V = S(k, sent_words[k-1])
-            W = S(k - 2, sent_words[k-1])
+            W = S(k-2, sent_words[k-1])
 
             for u in U:
                 for v in V:
@@ -82,6 +84,11 @@ def viterbi_algorithm(test_sentences, known_words, q_probs, e_probs):
                     pi[(k, u, v)] = max_score
                     bp[(k, u, v)] = max_tag
 
+                    # print(pi[(k, u, v)])
+                    # print(bp[(k, u, v)])
+                    # print(k, u, v)
+                    # print(sent_words[k-1])
+
         max_score = float('-Inf')
         u_max = None
         v_max = None
@@ -97,13 +104,21 @@ def viterbi_algorithm(test_sentences, known_words, q_probs, e_probs):
                     u_max = u
                     v_max = v
 
-        tags = deque()
-        tags.append(v_max)
-        tags.append(u_max)
+        # print(u_max, v_max)
 
-        for i, k in enumerate(range(n-2, 0, -1)):
-            tags.append(bp[(k+2, tags[i+1], tags[i])])
-        tags.reverse()
+        # tags = deque()
+        # tags.append(v_max)
+        # tags.append(u_max)
+
+        # for i, k in enumerate(range(n-2, 0, -1)):
+        #     tags.append(bp[(k+2, tags[i+1], tags[i])])
+        # tags.reverse()
+
+        tags = [" "]*n
+        tags[n-2], tags[n-1] = u, v
+
+        for k in range(n-2, 1, -1):
+            tags[k] = bp[(k+2, tags[k+1], tags[k])]
 
         tagged_sentence = deque()
         for j in range(0, n):
